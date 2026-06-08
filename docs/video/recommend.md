@@ -2811,3 +2811,415 @@ curl -G 'https://app.bilibili.com/x/v2/feed/index'
 ```
 
 </details>
+
+## 获取首页推荐信息流（APP端·Pegasus）
+
+> https://app.bilibili.com/x/v2/feed/index
+
+*请求方式：GET*
+
+此接口为B站APP端（含Android TV）首页推荐信息流接口，内部代号为 **Pegasus（飞马）** 推荐系统。
+
+认证方式：Cookie（SESSDATA）或 access_key
+
+**url参数：**
+
+| 参数名                | 类型  | 内容              | 必要性 | 备注                                        |
+|--------------------|-----|-----------------|-----|-------------------------------------------|
+| idx                | num | 分页游标            | 非必要 | 首次为0，后续使用上次响应最后一条item的idx值               |
+| flush              | num | 刷新类型            | 非必要 | 见下方枚举表，默认为0                               |
+| column             | num | 列数              | 非必要 | 固定为2（双列推荐）                                |
+| network            | str | 网络类型            | 非必要 | wifi/4G/5G等                               |
+| device_name        | str | 设备型号            | 非必要 | 如 "Pixel 6"                               |
+| privacy_disagree_mode | num | 隐私模式            | 非必要 | 固定为1                                      |
+| window_size_type   | num | 窗口尺寸类型          | 非必要 | 默认1，双列模式用2                                |
+| raw_window_size_type | num | 原始窗口尺寸类型        | 非必要 | 默认1                                       |
+| splash_id          | str | 闪屏广告ID          | 非必要 |                                           |
+| splash_ids         | str | 多个闪屏ID          | 非必要 |                                           |
+| splash_creative_id | num | 闪屏创意ID          | 非必要 |                                           |
+| access_key         | str | 用户访问令牌          | 非必要 | 登录后必传                                     |
+| platform           | str | 平台标识            | 非必要 | 固定为 "android"                             |
+| mobi_app           | str | APP标识           | 非必要 |                                           |
+| appkey             | str | 应用密钥标识          | 非必要 |                                           |
+| build              | num | APP版本号          | 非必要 | versionCode                               |
+| channel            | str | 安装渠道号           | 非必要 |                                           |
+| c_locale           | str | 当前App语言地区       | 非必要 |                                           |
+| s_locale           | str | 系统语言地区          | 非必要 |                                           |
+| sign               | str | 请求签名            | 必要  | 由 LibBili.signQuery() 生成                   |
+
+**flush 刷新类型枚举：**
+
+| 值  | 含义                  |
+|----|---------------------|
+| 0  | 正常加载（默认）            |
+| 1  | 从后台自动恢复             |
+| 2  | 切换样式                |
+| 3  | 兴趣变更                |
+| 4  | 切换推荐模式              |
+| 5  | 点击Tab刷新             |
+| 6  | 下拉刷新                |
+| 7  | 点击顶部刷新按钮            |
+| 8  | 上拉加载更多              |
+| 9  | 从其他页面自动返回           |
+| 11 | 从设置切换推荐模式           |
+| 12 | 从引导切换推荐模式           |
+| 14 | 带偏移量的Tab点击          |
+| 15 | 双击Tab刷新             |
+| 16 | 点击底部刷新按钮            |
+| 17 | 视频模式变更              |
+| 18 | 刷新引导                |
+| 19 | 首页Tab刷新引导           |
+| 20 | 行为触发自动返回            |
+| 21 | 登录状态变更              |
+| 22 | Tab切换列              |
+| 23 | 返回键触发刷新             |
+
+**json回复：**
+
+根对象：
+
+| 字段      | 类型  | 内容   | 备注                   |
+|---------|-----|------|----------------------|
+| code    | num | 返回值  | 0：成功 <br />-400：请求错误 |
+| message | str | 错误信息 | 默认为0                 |
+| ttl     | num | 1    |                      |
+| data    | obj |      |                      |
+
+`data`对象：
+
+| 字段     | 类型    | 内容       | 备注                |
+|--------|-------|----------|-------------------|
+| items  | array | 推荐卡片列表   | 核心数据              |
+| config | obj   | 页面配置信息   |                   |
+| ver    | str   | Feed版本标识 | 用于增量更新，类似web端的feed_version |
+
+`data`对象中`config`对象：
+
+| 字段               | 类型  | 内容     | 备注 |
+|------------------|-----|--------|----|
+| bottom_text      | str | 底部文案   |    |
+| bottom_text_cover | str | 底部文案封面 |    |
+| bottom_text_url  | str | 底部文案链接 |    |
+| item_title       | str | 项目标题   |    |
+| user_feature     | str | 用户特征标识 |    |
+
+`data`对象中`items`数组中的对象：
+
+| 字段                  | 类型    | 内容           | 备注                                                               |
+|---------------------|-------|--------------|-------------------------------------------------------------------|
+| idx                 | num   | 卡片排序索引       | 分页游标，用于下次请求的idx参数                                                |
+| id                  | num   | 卡片ID         |                                                                  |
+| card_type           | str   | 卡片展示类型       | 见下方卡片类型表                                                         |
+| card_goto           | str   | 卡片级跳转类型      |                                                                  |
+| goto                | str   | 跳转目标类型       | av: 视频<br />live: 直播<br />bangumi: 番剧<br />vertical_av: 竖屏视频<br />ketang: 课堂 |
+| param               | str   | 跳转参数         | 通常为avid或epid                                                     |
+| uri                 | str   | 跳转URI        | bilibili://... 格式                                                |
+| title               | str   | 标题           |                                                                  |
+| cover               | str   | 封面图片URL      |                                                                  |
+| track_id            | str   | 推荐追踪ID       | 曝光/点击上报时必须携带                                                     |
+| from_type           | str   | 推荐来源类型       |                                                                  |
+| subtitle            | str   | 副标题          |                                                                  |
+| args                | obj   | 附加参数         | 见args对象                                                         |
+| up_args             | obj   | UP主参数        | 见up_args对象                                                      |
+| player_args         | obj   | 播放器参数        | 含avid/cid等                                                      |
+| three_point_v2      | array | 三点菜单操作项(V2)  |                                                                  |
+| three_point_v3      | array | 三点菜单操作项(V3)  |                                                                  |
+| three_point_v4      | obj   | 三点菜单操作项(V4)  |                                                                  |
+| ad_info             | obj   | 广告信息         | 仅广告卡片有值                                                          |
+| is_ad               | num   | 是否为广告        | 0: 否<br />1: 是                                                  |
+| is_ad_loc           | num   | 是否为广告位       | 0: 否<br />1: 是                                                  |
+| request_id          | str   | 请求ID         |                                                                  |
+| creative_id         | num   | 创意ID         |                                                                  |
+| material_id         | num   | 素材ID         |                                                                  |
+| user_feature        | str   | 用户特征         | 推荐算法参数                                                           |
+| av_feature          | str   | 稿件特征         |                                                                  |
+| translated_title    | str   | 翻译后标题        |                                                                  |
+| translated_status   | str   | 翻译状态         |                                                                  |
+| square              | str   | 方形封面URL      |                                                                  |
+| click_url           | str   | 点击追踪URL      |                                                                  |
+| show_url            | str   | 展示追踪URL      |                                                                  |
+| dislike_report_data | str   | 负反馈上报数据      |                                                                  |
+| pos_rec_unique_id   | str   | 位置推荐唯一ID     |                                                                  |
+| zero_signal         | num   | 零信号标识        |                                                                  |
+| server_type         | num   | 服务端类型        | 默认-1                                                             |
+| card_index          | num   | 卡片索引         | 默认-1                                                             |
+| view_type           | str   | 视图类型         |                                                                  |
+| extra_rpt_fields    | obj   | 额外上报字段       |                                                                  |
+| client_ip           | str   | 客户端IP        |                                                                  |
+| index               | num   | 索引           |                                                                  |
+
+**卡片类型（card_type）：**
+
+不同 `card_type` 对应不同子类型，各有特有字段：
+
+| card_type          | 说明                | 特有字段                                                                                                         |
+|--------------------|-------------------|--------------------------------------------------------------------------------------------------------------|
+| small_cover_v2     | 小封面卡片（最常见）        | cover_left_text_1, desc, desc_1, desc_2, desc_3, rcmd_reason_style(标签对象), cover_badge_style, desc_button, resource_type, game_id |
+| up_small_cover     | 带UP主头像的小封面卡片      | avatar(头像对象), desc, relation(关系对象), recommend_reason_style, official_icon_v2                                  |
+| three_pic_v2       | 三图卡片（三张封面横排）      | covers(图片列表), desc_1, desc_2, top_left_title, more_text, more_uri                                            |
+| one_pic_v2         | 大图单封面卡片           | cover_left_text_1/2/3, cover_right_text, desc, cover_gif, top_rcmd_reason, bottom_rcmd_reason, avatar, like_button |
+| rcmd_multi         | 推荐多卡片容器（横向滑动卡片组）  | items(子卡片列表), more_text, more_uri                                                                            |
+| entrance           | 入口卡片（横向滑动入口组）     | items(子卡片列表)                                                                                                |
+| top_stick          | 置顶卡片              | desc                                                                                                         |
+
+`items`数组中的对象中的`args`对象：
+
+| 字段            | 类型  | 内容      | 备注 |
+|-------------|-----|---------|----|
+| aid         | num | 稿件AV ID |    |
+| up_id       | num | UP主MID  |    |
+| up_name     | str | UP主名称   |    |
+| rid         | num | 分区ID    |    |
+| rname       | str | 分区名称    |    |
+| tid         | num | 二级分区ID  |    |
+| tname       | str | 二级分区名称  |    |
+| type        | num | 内容类型    |    |
+| is_follow   | num | 是否关注UP主 |    |
+| online      | num | 在线人数    |    |
+| room_id     | num | 直播间ID   |    |
+| converge_type | num | 聚合类型    |    |
+| track_id    | str | 追踪ID    |    |
+| state       | str | 状态      |    |
+
+`items`数组中的对象中的`up_args`对象：
+
+| 字段       | 类型  | 内容      | 备注 |
+|----------|-----|---------|----|
+| up_id    | num | UP主ID   |    |
+| up_name  | str | UP主名称   |    |
+| up_face  | str | UP主头像URL |    |
+| selected | num | 是否选中/关注 |    |
+
+`items`数组中的对象中的`avatar`对象（up_small_cover卡片）：
+
+| 字段       | 类型  | 内容     | 备注 |
+|----------|-----|--------|----|
+| up_id    | num | 用户MID  |    |
+| cover    | str | 头像URL  |    |
+| text     | str | 头像旁文字  |    |
+| uri      | str | 跳转URI  |    |
+| type     | num | 类型     |    |
+| event    | str | 事件上报标识 |    |
+| event_v2 | str | 事件上报V2 |    |
+
+`items`数组中的对象中的`rcmd_reason_style`对象（推荐理由标签）：
+
+| 字段              | 类型  | 内容        | 备注        |
+|-----------------|-----|-----------|-----------|
+| text            | str | 推荐理由文字    |           |
+| text_color      | str | 文字颜色(亮色)  | 十六进制颜色值   |
+| text_color_night | str | 文字颜色(暗色)  | 十六进制颜色值   |
+| bg_color        | str | 背景颜色(亮色)  | 十六进制颜色值   |
+| bg_color_night  | str | 背景颜色(暗色)  | 十六进制颜色值   |
+| border_color    | str | 边框颜色(亮色)  | 十六进制颜色值   |
+| border_color_night | str | 边框颜色(暗色)  | 十六进制颜色值   |
+| icon_url        | str | 图标URL(亮色) |           |
+| icon_night_url  | str | 图标URL(暗色) |           |
+| icon_bg_url     | str | 图标背景URL   |           |
+| bg_style        | num | 背景样式      |           |
+| uri             | str | 跳转URI     |           |
+| event           | str | 事件上报      |           |
+| event_v2        | str | 事件上报V2    |           |
+| left_icon_type  | str | 左侧图标类型    | 如 "liveIcon" |
+| right_icon_type | num | 右侧图标类型    |           |
+
+`items`数组中的对象中的`desc_button`对象：
+
+| 字段       | 类型  | 内容   | 备注                  |
+|----------|-----|------|---------------------|
+| text     | str | 按钮文字 |                     |
+| param    | str | 按钮参数 |                     |
+| uri      | str | 跳转URI |                    |
+| event    | str | 事件上报 |                     |
+| type     | num | 按钮类型 |                     |
+| selected | num | 是否选中 |                     |
+| is_follow | num | 是否关注 | 0: 未关注<br />1: 已关注  |
+| is_followed | num | 是否被关注 | 0: 未被关注<br />1: 已被关注 |
+
+`items`数组中的对象中的`relation`对象（up_small_cover卡片）：
+
+| 字段           | 类型  | 内容          | 备注                  |
+|--------------|-----|-------------|---------------------|
+| is_follow    | num | 当前用户是否关注UP主 | 0: 未关注<br />1: 已关注  |
+| is_followed  | num | UP主是否互相关注   | 0: 否<br />1: 是      |
+
+<details>
+<summary>查看响应示例：</summary>
+
+```json
+{
+  "code": 0,
+  "message": "0",
+  "ttl": 1,
+  "data": {
+    "ver": "7.0",
+    "config": {
+      "bottom_text": "已为你推荐新内容",
+      "user_feature": "..."
+    },
+    "items": [
+      {
+        "idx": 1234567890,
+        "id": 987654321,
+        "card_type": "small_cover_v2",
+        "card_goto": "av",
+        "goto": "av",
+        "param": "170001",
+        "uri": "bilibili://video/170001",
+        "title": "视频标题示例",
+        "cover": "http://i0.hdslb.com/bfs/archive/xxx.jpg",
+        "track_id": "web:pgc:xxx",
+        "from_type": "rcmd",
+        "cover_left_text_1": "12:30",
+        "desc": "UP主名 · 1.2万播放",
+        "rcmd_reason_style": {
+          "text": "关注UP主更新",
+          "text_color": "#999999",
+          "bg_color": "#f4f4f4"
+        },
+        "args": {
+          "aid": 170001,
+          "up_id": 12345,
+          "up_name": "UP主名",
+          "rid": 3,
+          "rname": "音乐",
+          "tid": 30,
+          "tname": "VOCALOID·UTAU"
+        },
+        "player_args": {
+          "aid": 170001,
+          "cid": 300456
+        },
+        "three_point_v2": [
+          {
+            "type": "dislike",
+            "title": "不感兴趣"
+          }
+        ],
+        "is_ad": 0,
+        "is_ad_loc": 0
+      },
+      {
+        "idx": 1234567891,
+        "id": 987654322,
+        "card_type": "up_small_cover",
+        "card_goto": "av",
+        "goto": "av",
+        "param": "170002",
+        "uri": "bilibili://video/170002",
+        "title": "UP主推荐视频标题",
+        "cover": "http://i0.hdslb.com/bfs/archive/yyy.jpg",
+        "track_id": "xxx",
+        "avatar": {
+          "up_id": 67890,
+          "cover": "http://i0.hdslb.com/bfs/face/xxx.jpg",
+          "text": "UP主名"
+        },
+        "desc": "1.5万播放",
+        "relation": {
+          "is_follow": 1,
+          "is_followed": 0
+        },
+        "recommend_reason_style": {
+          "text": "已关注UP主更新"
+        },
+        "official_icon_v2": 1
+      },
+      {
+        "idx": 1234567892,
+        "id": 987654323,
+        "card_type": "three_pic_v2",
+        "card_goto": "av",
+        "goto": "av",
+        "param": "170003",
+        "uri": "bilibili://video/170003",
+        "title": "三图推荐标题",
+        "covers": [
+          "http://i0.hdslb.com/bfs/archive/a.jpg",
+          "http://i0.hdslb.com/bfs/archive/b.jpg",
+          "http://i0.hdslb.com/bfs/archive/c.jpg"
+        ],
+        "desc_1": "UP主名",
+        "desc_2": "5.6万播放",
+        "top_left_title": "热门推荐",
+        "track_id": "xxx"
+      }
+    ]
+  }
+}
+```
+
+</details>
+
+**注意事项：**
+
+- 本接口为APP端专用，与web端推荐接口（`/x/web-interface/wbi/index/top/feed/rcmd`）不同
+- 所有请求需经过 `LibBili.signQuery()` 签名，签名由 native SO 库（`libbili.so`）实现
+- 请求头需包含 `Buvid`、`Device-ID`、`User-Agent`、`fp_local`、`fp_remote`、`session_id` 等设备指纹信息
+- 分页使用 **游标方式**（idx字段），首次传0，后续传上次响应最后一条item的idx值
+- 每个 item 的 `track_id` 字段用于推荐效果追踪，点击/曝光上报时必须携带
+- 响应中可能包含广告卡片（`is_ad=1`），需根据业务需要过滤或展示
+- 颜色相关字段通常提供亮色/暗色两套值（如 `text_color` / `text_color_night`）
+- 不同 `card_type` 的卡片有不同特有字段，需根据类型分发渲染逻辑
+
+## 获取推荐页Tab配置（APP端·Pegasus）
+
+> https://app.bilibili.com/x/v2/feed/index/tab
+
+*请求方式：GET*
+
+获取推荐页顶部运营Tab配置信息。
+
+**url参数：**
+
+| 参数名     | 类型  | 内容   | 必要性 | 备注  |
+|--------|-----|------|-----|-----|
+| tab_id | str | Tab标识 | 非必要 |     |
+| id     | str | 运营ID | 非必要 |     |
+
+**json回复：**
+
+根对象：
+
+| 字段      | 类型  | 内容   | 备注                   |
+|---------|-----|------|----------------------|
+| code    | num | 返回值  | 0：成功 <br />-400：请求错误 |
+| message | str | 错误信息 | 默认为0                 |
+| ttl     | num | 1    |                      |
+| data    | obj |      |                      |
+
+## 获取推荐负反馈选项（APP端）
+
+> https://app.bilibili.com/x/v2/feed/nf
+
+*请求方式：GET*
+
+获取对某条推荐的"不感兴趣"反馈选项，用于展示负反馈弹窗。
+
+**url参数：**
+
+| 参数名             | 类型  | 内容     | 必要性 | 备注                    |
+|----------------|-----|--------|-----|-----------------------|
+| goto           | str | 跳转类型   | 非必要 | 如 av, live             |
+| id             | num | 卡片ID   | 非必要 |                       |
+| up_id          | num | UP主ID  | 非必要 |                       |
+| up_name        | str | UP主名称  | 非必要 |                       |
+| jumpgoto       | str | 跳转类型   | 非必要 |                       |
+| video_mode     | num | 视频模式   | 非必要 |                       |
+| column         | num | 列号     | 非必要 |                       |
+| tname          | str | 分区名称   | 非必要 |                       |
+| from           | num | 来源     | 非必要 |                       |
+| is_second_panel | num | 是否二级面板 | 非必要 | 0: 否<br />1: 是        |
+| title          | str | 视频标题   | 非必要 |                       |
+| dislike_info   | str | 负反馈信息  | 非必要 |                       |
+
+**json回复：**
+
+根对象：
+
+| 字段      | 类型  | 内容   | 备注                   |
+|---------|-----|------|----------------------|
+| code    | num | 返回值  | 0：成功 <br />-400：请求错误 |
+| message | str | 错误信息 | 默认为0                 |
+| ttl     | num | 1    |                      |
+| data    | obj |      |                      |
