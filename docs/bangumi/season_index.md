@@ -1126,3 +1126,141 @@ curl -G 'https://api.bilibili.com/pgc/season/player/ogv/cards' \
 ```
 
 </details>
+
+## 获取剧集索引筛选条件
+
+> https://api.bilibili.com/pgc/season/index/condition
+
+*请求方式：GET*
+
+鉴权方式：APP
+
+需要 APP 签名（公共参数与签名算法见 [../misc/sign/APP.md](../misc/sign/APP.md)），access_key 非必要
+
+**url参数：**
+
+仅列出业务参数，公共参数不列出
+
+| 参数名      | 类型 | 内容 | 必要性 | 备注                                             |
+| ----------- | ---- | ---- | ------ | ------------------------------------------------ |
+| season_type | num  | 类别 | 必要   | 番剧：`1` &nbsp; 电影：`2` &nbsp; 纪录片：`3`<br>国创：`4` &nbsp; 电视剧：`5` |
+| type        | num  | （？） | 必要 | 客户端固定传 `0`，作用尚不明确                   |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注           |
+| ------- | ---- | -------- | -------------- |
+| code    | num  | 返回值   | 0：成功        |
+| message | str  | 错误信息 |                |
+| data    | obj  | 信息本体 |                |
+
+`data`对象：
+
+| 字段  | 类型  | 内容         | 备注 |
+| ----- | ----- | ------------ | ---- |
+| filter | array | 筛选项列表   |      |
+| order | array | 排序方式列表 |      |
+
+`data` 中的 `filter` 数组中的对象：
+
+| 字段   | 类型  | 内容           | 备注                                           |
+| ------ | ----- | -------------- | ---------------------------------------------- |
+| field  | str   | 筛选参数名     | 如 `style_id`、`area`、`pub_date`、`season_month` |
+| name   | str   | 筛选项显示名   |                                                |
+| values | array | 筛选可选项列表 |                                                |
+
+`filter` 项中的 `values` 数组中的对象：
+
+| 字段    | 类型 | 内容             | 备注                           |
+| ------- | ---- | ---------------- | ------------------------------ |
+| keyword | str  | 筛选值           | 作为对应筛选参数的值           |
+| name    | str  | 筛选值显示名     |                                |
+
+`data` 中的 `order` 数组中的对象：
+
+| 字段  | 类型 | 内容           | 备注                 |
+| ----- | ---- | -------------- | -------------------- |
+| field | str  | 排序方式代码   | 用于 `order` 参数    |
+| name  | str  | 排序方式显示名 |                      |
+
+**示例：**
+
+获取番剧类别的索引筛选条件
+
+```shell
+curl -G 'https://api.bilibili.com/pgc/season/index/condition' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'season_type=1' \
+  --data-urlencode 'type=0' \
+  --data-urlencode 'sign=xxx'
+```
+
+## 获取剧集排行榜
+
+> https://api.bilibili.com/pgc/season/rank/list
+
+*请求方式：GET*
+
+**url参数：**
+
+| 参数名      | 类型 | 内容 | 必要性 | 备注                                             |
+| ----------- | ---- | ---- | ------ | ------------------------------------------------ |
+| season_type | num  | 类别 | 必要   | 番剧：`1` &nbsp; 电影：`2` &nbsp; 纪录片：`3`<br>国创：`4` &nbsp; 电视剧：`5` &nbsp; 综艺：`7` |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注           |
+| ------- | ---- | -------- | -------------- |
+| code    | num  | 返回值   | 0：成功        |
+| message | str  | 错误信息 |                |
+| data    | obj  | 信息本体 |                |
+
+`data`对象：
+
+| 字段 | 类型  | 内容       | 备注 |
+| ---- | ----- | ---------- | ---- |
+| list | array | 排行榜列表 |      |
+
+`data` 中的 `list` 数组中的对象：
+
+| 字段      | 类型 | 内容           | 备注 |
+| --------- | ---- | -------------- | ---- |
+| badge     | str  | 角标文本       |      |
+| badge_type | num | 角标类型       |      |
+| cover     | str  | 封面图 URL     |      |
+| desc      | str  | 剧集描述       |      |
+| new_ep    | obj  | 最新一话信息   |      |
+| pts       | num  | 排行积分       |      |
+| rank      | num  | 排名           |      |
+| season_id | num  | 剧集ssid       |      |
+| stat      | obj  | 剧集统计信息   |      |
+| title     | str  | 剧集标题       |      |
+| url       | str  | 剧集页面链接   |      |
+
+`list` 项中的 `new_ep` 对象：
+
+| 字段       | 类型 | 内容         | 备注 |
+| ---------- | ---- | ------------ | ---- |
+| cover      | str  | 封面图 URL   |      |
+| index_show | str  | 更新进度文本 |      |
+
+`list` 项中的 `stat` 对象：
+
+| 字段    | 类型 | 内容       | 备注 |
+| ------- | ---- | ---------- | ---- |
+| danmaku | num  | 弹幕数     |      |
+| follow  | num  | 追剧人数   |      |
+| view    | num  | 播放数     |      |
+
+**示例：**
+
+获取番剧类别排行榜
+
+```shell
+curl -G 'https://api.bilibili.com/pgc/season/rank/list' \
+  --data-urlencode 'season_type=1'
+```

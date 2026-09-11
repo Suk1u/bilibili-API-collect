@@ -1826,3 +1826,195 @@ curl 'https://api.live.bilibili.com/msg/send' \
 ```
 
 </details>
+
+## 发送直播弹幕（旧版）
+
+> https://api.live.bilibili.com/api/sendmsg
+
+*请求方式: POST*
+
+鉴权方式: APP（access_key）
+
+URL 需附带 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及 `actionKey`，签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**url参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ---- | --- | --- | ---- | --- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+
+**正文参数 (application/x-www-form-urlencoded)：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ---- | --- | --- | ---- | --- |
+| cid | num | 直播间id | 必要 |  |
+| mid | num | 发送者用户mid | 必要 |  |
+| msg | str | 弹幕内容 | 必要 | 需 URL 编码 |
+| rnd | num | 随机数 | 必要 | 客户端使用毫秒时间戳 |
+| mode | num | 弹幕模式 | 必要 | 默认 `1`（滚动） |
+| pool | num | 弹幕池 | 必要 | 默认 `0` |
+| type | str | 返回格式 | 必要 | 固定为 `json` |
+| color | num | 十进制颜色值 | 必要 | 默认 `16777215`（白色） |
+| fontsize | num | 字体大小 | 必要 | 默认 `25` |
+| playTime | num | （？） | 必要 | 固定为 `0.0`，作用尚不明确 |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| --- | --- | --- | --- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 |  |
+| data | obj | 信息本体 | 响应结构待补充 |
+
+**示例：**
+
+给直播间 `22637261` 发送内容为 `QwQ` 的弹幕
+
+```shell
+curl 'https://api.live.bilibili.com/api/sendmsg' \
+  --data-urlencode 'cid=22637261' \
+  --data-urlencode 'mid=xxx' \
+  --data-urlencode 'msg=QwQ' \
+  --data-urlencode 'rnd=1234567890123' \
+  --data-urlencode 'mode=1' \
+  --data-urlencode 'pool=0' \
+  --data-urlencode 'type=json' \
+  --data-urlencode 'color=16777215' \
+  --data-urlencode 'fontsize=25' \
+  --data-urlencode 'playTime=0.0'
+```
+
+注: 请求时需在 URL 上附带 APP 签名公共参数及 `actionKey=appkey`
+
+## 发送直播弹幕_app端
+
+> https://api.live.bilibili.com/xlive/app-room/v1/dM/sendmsg
+
+*请求方式: POST*
+
+鉴权方式: APP（access_key）
+
+功能较旧版接口更为丰富，可用于发送大表情（直播间表情）等
+
+URL 需附带 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及 `actionKey`，签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**url参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ---- | --- | --- | ---- | --- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+
+**正文参数 (application/x-www-form-urlencoded)：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ---- | --- | --- | ---- | --- |
+| msg | str | 弹幕内容 | 必要 | 发送表情弹幕时为表情的 `emoticon_unique` |
+| dm_type | num | 弹幕类型 | 必要 | `0`: 普通弹幕<br />`1`: 表情弹幕 |
+| extra | str | 附加信息 | 必要 | JSON 字符串，见下表 |
+| cid | num | 直播间id | 必要 |  |
+| mid | num | 发送者用户mid | 必要 |  |
+| ts | num | 发送时间 | 必要 | Unix 秒时间戳 |
+| rnd | num | 随机数 | 必要 | 客户端使用毫秒时间戳 |
+| mode | num | 弹幕模式 | 必要 | 默认 `1`（滚动） |
+| pool | num | 弹幕池 | 必要 | 默认 `0` |
+| type | str | 返回格式 | 必要 | 固定为 `json` |
+| color | num | 十进制颜色值 | 必要 | 默认 `16777215`（白色） |
+| fontsize | num | 字体大小 | 必要 | 默认 `25` |
+
+`extra` 字段内容（JSON 字符串）：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | --- | --- | --- |
+| content | str | 表情触发词 |  |
+| emoticon_unique | str | 表情唯一标识 | 格式为 `room_房间号_表情id` |
+| dm_type | num | 弹幕类型 | 表情弹幕为 `1` |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| --- | --- | --- | --- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 |  |
+| data | obj | 信息本体 | 响应结构待补充 |
+
+**示例：**
+
+给直播间 `22637261` 发送内容为 `QwQ` 的弹幕
+
+```shell
+curl 'https://api.live.bilibili.com/xlive/app-room/v1/dM/sendmsg' \
+  --data-urlencode 'msg=QwQ' \
+  --data-urlencode 'dm_type=0' \
+  --data-urlencode 'cid=22637261' \
+  --data-urlencode 'mid=xxx' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'rnd=1234567890123' \
+  --data-urlencode 'mode=1' \
+  --data-urlencode 'pool=0' \
+  --data-urlencode 'type=json' \
+  --data-urlencode 'color=16777215' \
+  --data-urlencode 'fontsize=25'
+```
+
+注: 请求时需在 URL 上附带 APP 签名公共参数及 `actionKey=appkey`
+
+## 获取弹幕连接信息_app端
+
+> https://api.live.bilibili.com/xlive/app-room/v1/index/getDanmuInfo
+
+*请求方式: GET*
+
+鉴权方式: APP（access_key）
+
+用于获取直播弹幕服务器连接信息（`token` 与弹幕服务器地址），需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**url参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ---- | --- | --- | ---- | --- |
+| room_id | num | 直播间id | 必要 |  |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| --- | --- | --- | --- |
+| code | num | 返回值 | 0: 成功<br />-400: 请求错误 |
+| message | str | 错误信息 |  |
+| data | obj | 信息本体 |  |
+
+`data` 对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| --- | --- | --- | --- |
+| token | str | 弹幕连接token | 用于建立弹幕服务器连接时的鉴权 |
+| host_list | array | 弹幕服务器列表 |  |
+
+`data.host_list` 数组中对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| --- | --- | --- | --- |
+| host | str | 弹幕服务器域名 |  |
+
+注: 响应中可能还存在端口等其他字段，响应结构待补充
+
+**示例：**
+
+获取直播间 `22637261` 的弹幕连接信息
+
+```shell
+curl -G 'https://api.live.bilibili.com/xlive/app-room/v1/index/getDanmuInfo' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'room_id=22637261' \
+  --data-urlencode 'sign=xxx'
+```

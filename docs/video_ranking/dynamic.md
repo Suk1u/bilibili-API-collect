@@ -635,3 +635,221 @@ curl -G 'https://api.bilibili.com/x/web-interface/newlist_rank' \
 ```
 
 </details>
+
+## 获取分区最新视频_app端
+
+> https://app.bilibili.com/x/v2/region/dynamic
+
+*请求方式：GET*
+
+鉴权方式：APP，需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+**url参数：**
+
+| 参数名 | 类型 | 内容    | 必要性 | 备注 |
+| ------ | ---- | ------- | ------ | ---- |
+| rid     | num  | 分区 tid | 必要   |      |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注           |
+| ------- | ---- | -------- | -------------- |
+| code    | num  | 返回值   | 0：成功        |
+| message | str  | 错误信息 |                |
+| data    | obj  | 信息本体 | 视频列表与翻页信息 |
+
+**示例：**
+
+```shell
+curl -G 'https://app.bilibili.com/x/v2/region/dynamic' \
+  --data-urlencode 'rid=1' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```
+
+## 获取分区最新视频列表_app端
+
+> https://app.biliapi.net/x/v2/region/dynamic/list
+
+*请求方式：GET*
+
+鉴权方式：APP，需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+用于 [获取分区最新视频_app端](#获取分区最新视频app端) 的翻页
+
+**url参数：**
+
+| 参数名 | 类型 | 内容          | 必要性 | 备注                                 |
+| ------ | ---- | ------------- | ------ | ------------------------------------ |
+| rid     | num  | 分区 tid      | 必要   |                                      |
+| ctime   | num  | 起始视频投稿时间 | 非必要 | 翻页时传入上一次列表最后一条的 ctime  |
+| pull    | str  | 是否下拉刷新  | 非必要 | `true`：是<br>`false`：否             |
+
+**json回复：**
+
+同 [获取分区最新视频_app端](#获取分区最新视频app端)
+
+**示例：**
+
+```shell
+curl -G 'https://app.biliapi.net/x/v2/region/dynamic/list' \
+  --data-urlencode 'rid=1' \
+  --data-urlencode 'ctime=xxx' \
+  --data-urlencode 'pull=false' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```
+
+## 获取子分区最新视频_app端
+
+> https://app.biliapi.net/x/v2/region/dynamic/child
+
+*请求方式：GET*
+
+鉴权方式：APP，需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+**url参数：**
+
+| 参数名 | 类型 | 内容     | 必要性 | 备注 |
+| ------ | ---- | -------- | ------ | ---- |
+| rid     | num  | 父分区 tid | 必要   |      |
+| tag_id  | num  | 子分区 tid | 非必要 | 0 为全部 |
+| pull    | str  | 是否下拉刷新 | 非必要 | `true`：是 |
+
+**json回复：**
+
+同 [获取分区最新视频_app端](#获取分区最新视频app端)
+
+**示例：**
+
+```shell
+curl -G 'https://app.biliapi.net/x/v2/region/dynamic/child' \
+  --data-urlencode 'rid=1' \
+  --data-urlencode 'tag_id=0' \
+  --data-urlencode 'pull=true' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```
+
+## 获取子分区最新视频列表_app端
+
+> https://app.bilibili.com/x/v2/region/dynamic/child/list
+
+*请求方式：GET*
+
+鉴权方式：APP，需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+用于 [获取子分区最新视频_app端](#获取子分区最新视频app端) 的翻页
+
+**url参数：**
+
+| 参数名 | 类型 | 内容              | 必要性 | 备注                                 |
+| ------ | ---- | ----------------- | ------ | ------------------------------------ |
+| rid     | num  | 父分区 tid        | 必要   |                                      |
+| tag_id  | num  | 子分区 tid        | 非必要 | 0 为全部                             |
+| ctime   | num  | 起始视频投稿时间  | 非必要 | 翻页时传入上一次列表最后一条的 ctime  |
+| pull    | str  | 是否下拉刷新      | 非必要 | 固定为 `false`                       |
+
+**json回复：**
+
+同 [获取分区最新视频_app端](#获取分区最新视频app端)
+
+**示例：**
+
+```shell
+curl -G 'https://app.bilibili.com/x/v2/region/dynamic/child/list' \
+  --data-urlencode 'rid=1' \
+  --data-urlencode 'tag_id=0' \
+  --data-urlencode 'ctime=xxx' \
+  --data-urlencode 'pull=false' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```
+
+## 获取子分区视频列表（分页）_app端
+
+> https://app.biliapi.net/x/v2/region/show/child/list
+
+*请求方式：GET*
+
+鉴权方式：APP，需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+**url参数：**
+
+| 参数名 | 类型 | 内容     | 必要性 | 备注                                     |
+| ------ | ---- | -------- | ------ | ---------------------------------------- |
+| rid     | num  | 父分区 tid | 必要   |                                          |
+| tag_id  | num  | 子分区 tid | 非必要 | 0 为全部                                 |
+| order   | str  | 排序方式 | 必要   | 如 `new`：最新                           |
+| pn      | num  | 页码     | 必要   |                                          |
+| ps      | num  | 每页数量 | 非必要 | 默认为 20                                |
+
+**json回复：**
+
+同 [获取分区最新视频_app端](#获取分区最新视频app端)
+
+**示例：**
+
+```shell
+curl -G 'https://app.biliapi.net/x/v2/region/show/child/list' \
+  --data-urlencode 'rid=1' \
+  --data-urlencode 'tag_id=0' \
+  --data-urlencode 'order=new' \
+  --data-urlencode 'pn=1' \
+  --data-urlencode 'ps=20' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```
+
+## 获取分区列表_app端
+
+> https://app.bilibili.com/x/v2/region/index
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注           |
+| ------- | ---- | -------- | -------------- |
+| code    | num  | 返回值   | 0：成功        |
+| message | str  | 错误信息 |                |
+| data    | obj  | 信息本体 | 分区列表       |
+
+**示例：**
+
+```shell
+curl -G 'https://app.bilibili.com/x/v2/region/index' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```

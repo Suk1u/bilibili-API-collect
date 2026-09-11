@@ -7768,3 +7768,89 @@ curl -G 'https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/all/update' \
 ```
 
 </details>
+
+## 获取动态列表_app端
+
+> https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+**url参数：**
+
+| 参数名     | 类型 | 内容             | 必要性 | 备注                                                   |
+| ---------- | ---- | ---------------- | ------ | ------------------------------------------------------ |
+| type_list | str  | 动态类型筛选     | 必要   | 全部：`268435455`<br>视频：`8`<br>专栏：`64`<br>番剧：`512,4097,4098,4099,4100,4101`<br>多个类型用`,`分隔 |
+| uid       | num  | 当前用户 uid     | 必要   |                                                        |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注                           |
+| ------- | ---- | -------- | ------------------------------ |
+| code    | num  | 返回值   | 0：成功                        |
+| message | str  | 错误信息 | 成功时：0                      |
+| data    | obj  | 信息本体 | 响应结构待补充                 |
+
+`data` 对象：
+
+| 字段       | 类型 | 内容           | 备注                       |
+| ---------- | ---- | -------------- | -------------------------- |
+| cards      | array | 动态卡片列表 | 结构与 web 端动态卡片类似   |
+| has_more   | num  | 是否还有更多   | 0：无<br>1：有              |
+| next_offset | num | 下次请求偏移   | 配合`dynamic_history`翻页使用 |
+
+**示例：**
+
+```shell
+curl -G 'https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new' \
+  --data-urlencode 'type_list=268435455' \
+  --data-urlencode 'uid=xxx' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```
+
+## 获取历史动态_app端
+
+> https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_history
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+用于`dynamic_new`的翻页
+
+**url参数：**
+
+| 参数名           | 类型 | 内容                   | 必要性 | 备注                             |
+| ---------------- | ---- | ---------------------- | ------ | -------------------------------- |
+| offset_dynamic_id | num | 起始动态 id           | 必要   | 使用上一次响应中的`next_offset`   |
+| type_list        | str  | 动态类型筛选           | 必要   | 同`dynamic_new`                  |
+| uid              | num  | 当前用户 uid           | 必要   |                                  |
+
+**json回复：**
+
+同 [获取动态列表_app端](#获取动态列表app端)
+
+**示例：**
+
+```shell
+curl -G 'https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_history' \
+  --data-urlencode 'offset_dynamic_id=xxx' \
+  --data-urlencode 'type_list=268435455' \
+  --data-urlencode 'uid=xxx' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```

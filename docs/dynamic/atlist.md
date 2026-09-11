@@ -236,3 +236,47 @@ curl -G 'https://api.bilibili.com/x/polymer/web-dynamic/v1/mention/search' \
 ```
 
 </details>
+## 获取@推荐用户列表_app端
+
+> https://api.vc.bilibili.com/dynamic_mix/v1/dynamic_mix/rcmd_at
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+**url参数：**
+
+| 参数名        | 类型 | 内容         | 必要性 | 备注             |
+| ------------- | ---- | ------------ | ------ | ---------------- |
+| need_attention | num | 是否包含关注用户 | 非必要 | 0：否<br>1：是 |
+| need_recent_at | num | 是否包含最近@过用户 | 非必要 | 0：否<br>1：是 |
+| page          | num  | 页码         | 非必要 | 默认为 1         |
+| pagesize      | num  | 每页数量     | 非必要 | 默认为 20        |
+| teenagers_mode | num | 青少年模式   | 非必要 | 0：关闭          |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注                     |
+| ------- | ---- | -------- | ------------------------ |
+| code    | num  | 返回值   | 0：成功                  |
+| message | str  | 错误信息 |                          |
+| data    | obj  | 信息本体 | 响应结构待补充           |
+
+**示例：**
+
+```shell
+curl -G 'https://api.vc.bilibili.com/dynamic_mix/v1/dynamic_mix/rcmd_at' \
+  --data-urlencode 'need_attention=1' \
+  --data-urlencode 'need_recent_at=1' \
+  --data-urlencode 'page=1' \
+  --data-urlencode 'pagesize=20' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```

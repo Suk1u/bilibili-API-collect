@@ -658,6 +658,53 @@ curl -G 'https://app.bilibili.com/x/v2/account/myinfo' \
 </details>
 
 
+## 查询个人信息（APP端旧版）
+
+> https://app.bilibili.com/x/v2/account/mine
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+需传入 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），详见 [APP API 签名](../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 | 默认为0 |
+| data    | obj  | 信息本体 |         |
+
+`data`对象：
+
+| 字段      | 类型 | 内容         | 备注                       |
+| --------- | ---- | ------------ | -------------------------- |
+| mid       | num  | 用户 mid     |                            |
+| name      | str  | 用户昵称     |                            |
+| face      | str  | 用户头像 url |                            |
+| level     | num  | 用户等级     |                            |
+| following | num  | 关注数       |                            |
+| follower  | num  | 粉丝数       |                            |
+| dynamic   | num  | 动态数       |                            |
+
+注：`data` 中其余字段作用尚不明确，响应结构待补充
+
+**示例：**
+
+```shell
+curl -G 'https://app.bilibili.com/x/v2/account/mine' \
+--data-urlencode 'access_key=xxx' \
+--data-urlencode 'appkey=xxx' \
+--data-urlencode 'build=xxx' \
+--data-urlencode 'mobi_app=android' \
+--data-urlencode 'platform=android' \
+--data-urlencode 'ts=0' \
+--data-urlencode 'sign=xxx'
+```
+
 ## 登录用户状态数（双端）
 
 > https://api.bilibili.com/x/web-interface/nav/stat

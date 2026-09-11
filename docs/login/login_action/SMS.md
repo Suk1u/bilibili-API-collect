@@ -90,6 +90,60 @@ curl 'https://passport.bilibili.com/web/generic/country/list'
 </details>
 
 
+## 获取国际冠字码_app端
+
+> https://passport.bilibili.com/x/passport-login/country
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../../misc/sign/APP.md)
+
+需传入 APP 签名公共参数（`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），详见 [APP API 签名](../../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容     | 备注    |
+| ---- | ---- | -------- | ------- |
+| code | num  | 返回值   | 0：成功 |
+| message | str | 错误信息 | 默认为0 |
+| data | obj  | 数据本体 |         |
+
+`data`对象：
+
+| 字段 | 类型  | 内容              | 备注 |
+| ---- | ----- | ----------------- | ---- |
+| list | array | 国家&地区列表     |      |
+
+`data`中的`list`数组：
+
+| 项   | 类型 | 内容           | 备注 |
+| ---- | ---- | -------------- | ---- |
+| 0    | obj  | 国家&地区1     |      |
+| n    | obj  | 国家&地区(n+1) |      |
+| ……   | obj  | ……             | ……   |
+
+`list`数组中的对象：
+
+| 字段         | 类型 | 内容           | 备注 |
+| ------------ | ---- | -------------- | ---- |
+| id           | num  | 国际代码值     |      |
+| cname        | str  | 国家&地区名    |      |
+| country_code | str  | 国家&地区区号  |      |
+
+**示例：**
+
+```shell
+curl -G 'https://passport.bilibili.com/x/passport-login/country' \
+--data-urlencode 'appkey=xxx' \
+--data-urlencode 'build=xxx' \
+--data-urlencode 'mobi_app=android' \
+--data-urlencode 'platform=android' \
+--data-urlencode 'ts=0' \
+--data-urlencode 'sign=xxx'
+```
+
 ## 发送短信验证码_app端
 
 > https://passport.bilibili.com/x/passport-login/sms/send

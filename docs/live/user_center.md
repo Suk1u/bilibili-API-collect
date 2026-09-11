@@ -218,3 +218,275 @@
 | code | num | 返回值 | 0: 成功 |
 | message | str | 错误信息 | |
 | data | obj | 关注列表 | |
+
+---
+
+## 直播签到_app端
+
+> https://api.live.bilibili.com/rc/v1/Sign/doSign
+
+*请求方式: GET*
+
+鉴权方式: APP（access_key）
+
+需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数:**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| text | str | 签到结果文案 | |
+
+注: `data` 中其余字段作用尚不明确，响应结构待补充
+
+**示例:**
+
+```shell
+curl -G 'https://api.live.bilibili.com/rc/v1/Sign/doSign' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'sign=xxx'
+```
+
+---
+
+## 获取签到信息_app端
+
+> https://api.live.bilibili.com/rc/v2/Sign/getSignInfo
+
+*请求方式: GET*
+
+鉴权方式: APP（access_key）
+
+需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数:**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 签到信息 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| is_signed | bool | 今日是否已签到 | |
+| days | num | （？） | 作用尚不明确 |
+| sign_days | num | 已签到天数 | |
+| h5_url | str | 签到页面链接 | |
+| days_award | array | 签到奖励列表 | |
+| awards | array | 签到奖励列表 | |
+
+`days_award`、`awards`数组中的对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| count | num | 奖励数量 | |
+| award | str | 奖励名称 | |
+| text | str | 奖励文案 | |
+| img | obj | 奖励图片 | |
+
+`img`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| width | num | 图片宽度 | |
+| src | str | 图片链接 | |
+| height | num | 图片高度 | |
+
+**示例:**
+
+```shell
+curl -G 'https://api.live.bilibili.com/rc/v2/Sign/getSignInfo' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'sign=xxx'
+```
+
+---
+
+## 获取主播头衔列表_app端
+
+> https://api.live.bilibili.com/rc/v1/Title/getTitle
+
+*请求方式: GET*
+
+鉴权方式: APP（access_key）
+
+需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数:**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | array | 头衔列表 | |
+
+`data`数组中的对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| id | str | 头衔id | |
+| title | str | 头衔名称 | |
+| img | str | 头衔图片url | |
+
+**示例:**
+
+```shell
+curl -G 'https://api.live.bilibili.com/rc/v1/Title/getTitle' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'sign=xxx'
+```
+
+---
+
+## 获取当前宝箱任务_app端
+
+> https://api.live.bilibili.com/mobile/freeSilverCurrentTask
+
+*请求方式: GET*
+
+鉴权方式: APP（access_key）
+
+用于获取直播观看宝箱（免费瓜子）任务信息，需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数:**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 任务信息 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| time_end | num | 宝箱开启时间 | Unix 秒时间戳 |
+
+注: `data` 中其余字段作用尚不明确，响应结构待补充
+
+**示例:**
+
+```shell
+curl -G 'https://api.live.bilibili.com/mobile/freeSilverCurrentTask' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'sign=xxx'
+```
+
+---
+
+## 领取宝箱瓜子_app端
+
+> https://api.live.bilibili.com/mobile/freeSilverAward
+
+*请求方式: GET*
+
+鉴权方式: APP（access_key）
+
+用于领取直播观看宝箱（免费瓜子）奖励，需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数:**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+
+注: 第三方客户端 biliuwp-lite 调用该接口时未携带其他业务参数（宝箱任务时间等由服务端校验）
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 领取结果 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| awardSilver | num | 获得的银瓜子数量 | |
+
+注: `data` 中其余字段作用尚不明确，响应结构待补充
+
+**示例:**
+
+```shell
+curl -G 'https://api.live.bilibili.com/mobile/freeSilverAward' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'sign=xxx'
+```

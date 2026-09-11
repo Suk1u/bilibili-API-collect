@@ -553,3 +553,79 @@ curl -X POST 'https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/publish
 ```
 
 </details>
+
+## 发表图片动态_app端
+
+> https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/create_draw
+
+*请求方法：POST*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+**正文参数（application/x-www-form-urlencoded）：**
+
+| 参数名     | 类型 | 内容                | 必要性 | 备注                                        |
+| ---------- | ---- | ------------------- | ------ | ------------------------------------------- |
+| uid        | num  | 发送者 uid          | 必要   |                                             |
+| category   | num  | 分类                | 必要   | 日常动态为 `3`                              |
+| pictures   | str  | 图片信息列表        | 必要   | json 数组，含图片 url 等，需先上传           |
+| description | str | 动态正文            | 必要   |                                             |
+| content    | str  | 动态正文            | 必要   | 与`description`相同                          |
+| at_uids    | str  | 被@的用户 uid 列表  | 非必要 | 无则为空                                    |
+| at_control | str  | @位置控制信息       | 非必要 | json 序列化，无则为空                       |
+| extension  | str  | 扩展字段           | 非必要 | 如 `{"emoji_type":1}`                       |
+| setting    | str  | 动态设置           | 非必要 | 如 `{"copy_forbidden":0}` 禁止转载          |
+
+**json回复：**
+
+同 [发表文字动态_app端](#发表文字动态app端)
+
+**示例：**
+
+```shell
+curl -X POST 'https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/create_draw' \
+  --data-urlencode 'uid=xxx' \
+  --data-urlencode 'category=3' \
+  --data-urlencode 'pictures=xxx' \
+  --data-urlencode 'content=xxx' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```
+
+## 获取图片上传凭证_app端
+
+> https://api.vc.bilibili.com/api/v1/drawImage/upload
+
+*请求方法：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+用于发表图片动态前获取图片上传凭证
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注                     |
+| ------- | ---- | -------- | ------------------------ |
+| code    | num  | 返回值   | 0：成功                  |
+| message | str  | 错误信息 |                          |
+| data    | obj  | 信息本体 | 含上传地址等，响应结构待补充 |
+
+**示例：**
+
+```shell
+curl -G 'https://api.vc.bilibili.com/api/v1/drawImage/upload' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```

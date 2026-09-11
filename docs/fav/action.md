@@ -470,3 +470,237 @@ curl 'https://api.bilibili.com/x/v3/fav/resource/clean' \
 ```
 
 </details>
+
+## 收藏夹收藏操作
+
+### 收藏收藏夹（旧版）
+
+> https://api.bilibili.com/x/v3/fav/folder/fav
+
+*请求方式：POST*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+用于收藏他人创建的收藏夹
+
+**正文参数（application/x-www-form-urlencoded）：**
+
+| 参数名   | 类型 | 内容             | 必要性 | 备注 |
+| -------- | ---- | ---------------- | ------ | ---- |
+| media_id | num  | 目标收藏夹mdid   | 必要   |      |
+
+除此之外还需传入 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），详见 [APP API 签名](../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 | 默认为0 |
+| data    | obj  | 信息本体 |         |
+
+注：`data` 中字段作用尚不明确，响应结构待补充
+
+**示例：**
+
+收藏id为`1182306172`的收藏夹：
+
+```shell
+curl 'https://api.bilibili.com/x/v3/fav/folder/fav' \
+--data-urlencode 'media_id=1182306172' \
+--data-urlencode 'access_key=xxx' \
+--data-urlencode 'appkey=xxx' \
+--data-urlencode 'build=xxx' \
+--data-urlencode 'mobi_app=android' \
+--data-urlencode 'platform=android' \
+--data-urlencode 'ts=0' \
+--data-urlencode 'sign=xxx'
+```
+
+### 取消收藏收藏夹（旧版）
+
+> https://api.bilibili.com/x/v3/fav/folder/unfav
+
+*请求方式：POST*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+**正文参数（application/x-www-form-urlencoded）：**
+
+| 参数名   | 类型 | 内容           | 必要性 | 备注 |
+| -------- | ---- | -------------- | ------ | ---- |
+| media_id | num  | 目标收藏夹mdid | 必要   |      |
+
+除此之外还需传入 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），详见 [APP API 签名](../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 | 默认为0 |
+| data    | obj  | 信息本体 |         |
+
+注：`data` 中字段作用尚不明确，响应结构待补充
+
+**示例：**
+
+取消收藏id为`1182306172`的收藏夹：
+
+```shell
+curl 'https://api.bilibili.com/x/v3/fav/folder/unfav' \
+--data-urlencode 'media_id=1182306172' \
+--data-urlencode 'access_key=xxx' \
+--data-urlencode 'appkey=xxx' \
+--data-urlencode 'build=xxx' \
+--data-urlencode 'mobi_app=android' \
+--data-urlencode 'platform=android' \
+--data-urlencode 'ts=0' \
+--data-urlencode 'sign=xxx'
+```
+
+### 取消收藏合集
+
+> https://api.bilibili.com/x/v3/fav/season/unfav
+
+*请求方式：POST*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+用于取消收藏收藏的合集（季节）
+
+**正文参数（application/x-www-form-urlencoded）：**
+
+| 参数名    | 类型 | 内容     | 必要性 | 备注 |
+| --------- | ---- | -------- | ------ | ---- |
+| season_id | num  | 目标合集id | 必要 |      |
+
+除此之外还需传入 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），详见 [APP API 签名](../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 | 默认为0 |
+| data    | obj  | 信息本体 |         |
+
+注：`data` 中字段作用尚不明确，响应结构待补充
+
+**示例：**
+
+取消收藏id为`12345`的合集：
+
+```shell
+curl 'https://api.bilibili.com/x/v3/fav/season/unfav' \
+--data-urlencode 'season_id=12345' \
+--data-urlencode 'access_key=xxx' \
+--data-urlencode 'appkey=xxx' \
+--data-urlencode 'build=xxx' \
+--data-urlencode 'mobi_app=android' \
+--data-urlencode 'platform=android' \
+--data-urlencode 'ts=0' \
+--data-urlencode 'sign=xxx'
+```
+
+## 收藏夹排序
+
+### 收藏夹排序
+
+> https://api.bilibili.com/x/v3/fav/folder/sort
+
+*请求方式：POST*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+按传入顺序对已创建的收藏夹进行整体排序
+
+**正文参数（application/x-www-form-urlencoded）：**
+
+| 参数名 | 类型 | 内容                   | 必要性 | 备注                   |
+| ------ | ---- | ---------------------- | ------ | ---------------------- |
+| sort   | nums | 收藏夹mdid列表        | 必要   | 每个成员间用`,`分隔    |
+
+除此之外还需传入 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），详见 [APP API 签名](../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 | 默认为0 |
+| data    | obj  | 信息本体 |         |
+
+注：`data` 中字段作用尚不明确，响应结构待补充
+
+**示例：**
+
+将收藏夹`1182306172` `1178751999` `1161340172`按此顺序排序：
+
+```shell
+curl 'https://api.bilibili.com/x/v3/fav/folder/sort' \
+--data-urlencode 'sort=1182306172,1178751999,1161340172' \
+--data-urlencode 'access_key=xxx' \
+--data-urlencode 'appkey=xxx' \
+--data-urlencode 'build=xxx' \
+--data-urlencode 'mobi_app=android' \
+--data-urlencode 'platform=android' \
+--data-urlencode 'ts=0' \
+--data-urlencode 'sign=xxx'
+```
+
+### 收藏夹内容排序
+
+> https://api.bilibili.com/x/v3/fav/resource/sort
+
+*请求方式：POST*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+通过移动单条内容对收藏夹内的内容进行排序
+
+**正文参数（application/x-www-form-urlencoded）：**
+
+| 参数名   | 类型 | 内容                     | 必要性 | 备注                                                         |
+| -------- | ---- | ------------------------ | ------ | ------------------------------------------------------------ |
+| media_id | num  | 目标收藏夹mdid           | 必要   |                                                              |
+| sort     | str  | 移动指令                 | 必要   | 格式：`{目标内容id}:{内容类型}:{源内容id}:{内容类型}`<br />`目标内容id`为`0`时移动到第一位<br />否则将`源内容id`移动到`目标内容id`之后<br />类型：2：视频稿件 |
+
+除此之外还需传入 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），详见 [APP API 签名](../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 | 默认为0 |
+| data    | obj  | 信息本体 |         |
+
+注：`data` 中字段作用尚不明确，响应结构待补充
+
+**示例：**
+
+将收藏夹`1178751999`中视频稿件`av21822819`移动到视频稿件`av21918689`之后：
+
+```shell
+curl 'https://api.bilibili.com/x/v3/fav/resource/sort' \
+--data-urlencode 'media_id=1178751999' \
+--data-urlencode 'sort=21918689:2:21822819:2' \
+--data-urlencode 'access_key=xxx' \
+--data-urlencode 'appkey=xxx' \
+--data-urlencode 'build=xxx' \
+--data-urlencode 'mobi_app=android' \
+--data-urlencode 'platform=android' \
+--data-urlencode 'ts=0' \
+--data-urlencode 'sign=xxx'
+```

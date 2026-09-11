@@ -883,3 +883,81 @@ curl 'https://api.bilibili.com/x/v2/history/shadow' \
 ```
 
 </details>
+
+## 搜索历史记录
+
+> https://api.bilibili.com/x/web-interface/history/search
+
+*请求方式：GET*
+
+认证方式：Cookie（SESSDATA）
+
+**url参数：**
+
+| 参数名   | 类型 | 内容         | 必要性 | 备注                          |
+| -------- | ---- | ------------ | ------ | ----------------------------- |
+| keyword  | str  | 搜索关键字   | 必要   |                               |
+| pn       | num  | 页码         | 必要   | 默认为 1                      |
+| ps       | num  | 每页数量     | 非必要 | 默认为 20                     |
+| business | str  | 业务类型筛选 | 非必要 | `all`：全部<br>支持按业务筛选 |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注           |
+| ------- | ---- | -------- | -------------- |
+| code    | num  | 返回值   | 0：成功        |
+| message | str  | 错误信息 |                |
+| data    | obj  | 信息本体 | 响应结构待补充 |
+
+**示例：**
+
+```shell
+curl -G 'https://api.bilibili.com/x/web-interface/history/search' \
+  --data-urlencode 'keyword=bilibili' \
+  --data-urlencode 'pn=1' \
+  --data-urlencode 'ps=20' \
+  --data-urlencode 'business=all' \
+  -b 'SESSDATA=xxx'
+```
+
+## 获取直播观看历史_app端
+
+> https://app.bilibili.com/x/v2/history/liveList
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+**url参数：**
+
+| 参数名 | 类型 | 内容     | 必要性 | 备注        |
+| ------ | ---- | -------- | ------ | ----------- |
+| pn     | num  | 页码     | 必要   | 默认为 1    |
+| ps     | num  | 每页数量 | 非必要 | 默认为 20   |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注           |
+| ------- | ---- | -------- | -------------- |
+| code    | num  | 返回值   | 0：成功        |
+| message | str  | 错误信息 |                |
+| data    | obj  | 信息本体 | 响应结构待补充 |
+
+**示例：**
+
+```shell
+curl -G 'https://app.bilibili.com/x/v2/history/liveList' \
+  --data-urlencode 'pn=1' \
+  --data-urlencode 'ps=20' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```

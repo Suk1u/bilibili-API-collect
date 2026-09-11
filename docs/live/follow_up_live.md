@@ -315,3 +315,141 @@ curl -G 'https://api.live.bilibili.com/xlive/web-ucenter/v1/xfetter/GetWebList' 
 ```
 
 </details>
+
+## 获取关注的开播主播列表_app端
+
+> https://api.live.bilibili.com/xlive/app-interface/v1/relation/liveAnchor
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key）
+
+获取当前用户关注且正在直播的主播列表，需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+|---------|-----|------|-----|-------|
+| qn | num | 画质？ | 必要 | 客户端固定传 `0`，作用尚不明确 |
+| sortRule | num | 排序规则 | 必要 | 客户端固定传 `0` |
+| filterRule | num | 过滤规则 | 必要 | 客户端固定传 `0` |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| rooms | array | 开播主播列表 | |
+
+`data.rooms`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| roomid | num | 直播间id | |
+| uid | str | 主播mid | |
+| uname | str | 主播用户名 | |
+| face | str | 主播头像url | |
+| title | str | 直播间标题 | |
+| live_tag_name | str | 直播标签名 | |
+| online | num | 人气值 | |
+| area_name | str | 旧版分区名 | |
+| area_v2_name | str | 子分区名 | |
+| area_v2_parent_name | str | 父分区名 | |
+| live_time | num | 开播时间 | Unix 秒时间戳 |
+| cover | str | 直播间封面url | |
+| pendent_ru | str | 头像框文案 | |
+| pendent_ru_color | str | 头像框文案颜色 | |
+| pendent_ru_pic | str | 头像框图片url | |
+
+**示例：**
+
+```shell
+curl -G 'https://api.live.bilibili.com/xlive/app-interface/v1/relation/liveAnchor' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'qn=0' \
+  --data-urlencode 'sortRule=0' \
+  --data-urlencode 'filterRule=0' \
+  --data-urlencode 'sign=xxx'
+```
+
+## 获取关注的主播列表（未开播）_app端
+
+> https://api.live.bilibili.com/xlive/app-interface/v1/relation/unliveAnchor
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key）
+
+获取当前用户关注且未在直播的主播列表，需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+|---------|-----|------|-----|-------|
+| page | num | 页码 | 必要 | 默认为 `1` |
+| pagesize | num | 每页数据数量 | 必要 | 客户端固定传 `30` |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| rooms | array | 未开播主播列表 | |
+| has_more | num | 是否还有更多数据 | 0：没有<br />1：有 |
+
+`data.rooms`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| roomid | num | 直播间id | |
+| uid | str | 主播mid | |
+| uname | str | 主播用户名 | |
+| face | str | 主播头像url | |
+| title | str | 直播间标题 | |
+| area_name | str | 旧版分区名 | |
+| area_v2_name | str | 子分区名 | |
+| area_v2_parent_name | str | 父分区名 | |
+| cover | str | 直播间封面url | |
+| pendent_ru | str | 头像框文案 | |
+| pendent_ru_color | str | 头像框文案颜色 | |
+| pendent_ru_pic | str | 头像框图片url | |
+| live_desc | str | 最近直播描述 | |
+| announcement_content | str | 直播间公告 | |
+
+**示例：**
+
+```shell
+curl -G 'https://api.live.bilibili.com/xlive/app-interface/v1/relation/unliveAnchor' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'page=1' \
+  --data-urlencode 'pagesize=30' \
+  --data-urlencode 'sign=xxx'
+```

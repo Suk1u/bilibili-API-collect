@@ -381,9 +381,64 @@ curl 'https://passport.bilibili.com/api/oauth2/getKey' \
 
 </details>
 
-### 登录操作(APP端)
+### 登录操作(APP端旧版oauth2)
 
-TODO
+> https://passport.bilibili.com/api/oauth2/login
+
+*请求方式：POST*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../../misc/sign/APP.md)
+
+密码需先通过[获取公钥&盐(APP端)](#获取公钥盐app端)接口获取 RSA 公钥与盐值，将`盐值+明文密码`使用公钥加密后进行 base64 编码，加密方式详见[登录密码的加密实例](#登录密码的加密实例)
+
+**正文参数（application/x-www-form-urlencoded）：**
+
+| 参数名 | 类型 | 内容             | 必要性 | 备注                                   |
+|--------|-----|------------------|--------|----------------------------------------|
+| username | str | 用户登录账号     | 必要   |                                        |
+| password | str | 加密后的带盐密码 | 必要   | base64 格式                            |
+| captcha  | str | 图片验证码       | 非必要 | 触发风控时需要                         |
+
+除此之外还需传入 APP 签名公共参数（`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），详见 [APP API 签名](../../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段   | 类型 | 内容         | 备注                                       |
+|--------|-----|--------------|--------------------------------------------|
+| code   | num | 返回值       | 0：成功<br />2100：需要进行安全验证        |
+| ts     | num | 当前时间戳   |                                            |
+| message | str | 错误信息    | 默认为0                                    |
+| url    | str | 安全验证链接 | `code` 为 `2100` 时返回，用于二次验证      |
+| data   | obj | 令牌信息     |                                            |
+
+`data`对象：
+
+| 字段          | 类型 | 内容           | 备注           |
+|---------------|-----|----------------|----------------|
+| mid           | num | 用户 mid       |                |
+| access_token  | str | 登录令牌       |                |
+| refresh_token | str | 刷新令牌       |                |
+| expires_in    | num | 有效时长       | 单位为秒       |
+
+注：响应中可能还包含 cookie 信息等字段，响应结构待补充
+
+**示例：**
+
+例如用户账号为`12345678900`，加密后的密码为`xxx`，进行登录操作
+
+```shell
+curl 'https://passport.bilibili.com/api/oauth2/login' \
+--data-urlencode 'username=12345678900' \
+--data-urlencode 'password=xxx' \
+--data-urlencode 'appkey=xxx' \
+--data-urlencode 'build=xxx' \
+--data-urlencode 'mobi_app=android' \
+--data-urlencode 'platform=android' \
+--data-urlencode 'ts=0' \
+--data-urlencode 'sign=xxx'
+```
 
 ## 登录密码的加密实例
 

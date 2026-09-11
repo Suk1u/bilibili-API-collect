@@ -269,3 +269,95 @@ curl -G 'https://api.live.bilibili.com/room/v2/Index/getNewRankTop' \
 | code | num | 返回值 | 0: 成功 |
 | message | str | 错误信息 | |
 | data | obj | 遮罩信息 | |
+
+---
+
+## 获取直播首页全部列表_app端
+
+> https://api.live.bilibili.com/xlive/app-interface/v2/index/getAllList
+
+*请求方式: GET*
+
+鉴权方式: APP（access_key）
+
+获取直播首页信息（banner、分区入口等），需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+注: 仅有 `mobi_app=android` 时才能获取到 `area_entrance_v2` 字段
+
+**URL参数:**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| device | str | 设备类型 | 必要 | 固定为 `android` |
+| rec_page | num | 推荐页码 | 必要 | 默认为 `1` |
+| relation_page | num | 关注页码 | 必要 | 默认为 `1` |
+| scale | str | 分辨率标识 | 必要 | 如 `xxhdpi` |
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| banner | array | 首页banner列表 | 每项含 `list` 字段为banner列表 |
+| area_entrance_v2 | array | 分区入口列表 | 每项含 `list` 字段为分区入口列表<br />仅 `mobi_app=android` 时返回 |
+
+`data.banner`数组中的对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| list | array | banner列表 | |
+
+`data.banner[].list`数组中的对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| id | num | banner id | |
+| title | str | banner标题 | |
+| pic | str | banner图片url | |
+| link | str | 跳转链接 | |
+
+`data.area_entrance_v2`数组中的对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| list | array | 分区入口列表 | |
+
+`data.area_entrance_v2[].list`数组中的对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| id | num | 入口 id | |
+| area_v2_id | num | 直播子分区id | |
+| area_v2_parent_id | num | 直播父分区id | |
+| tag_type | num | 标签类型 | |
+| title | str | 入口标题 | |
+| pic | str | 入口图片url | |
+| link | str | 跳转链接 | |
+
+注: 响应中可能还存在推荐直播间等其他字段，响应结构待补充
+
+**示例:**
+
+```shell
+curl -G 'https://api.live.bilibili.com/xlive/app-interface/v2/index/getAllList' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'device=android' \
+  --data-urlencode 'rec_page=1' \
+  --data-urlencode 'relation_page=1' \
+  --data-urlencode 'scale=xxhdpi' \
+  --data-urlencode 'sign=xxx'
+```

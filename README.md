@@ -82,6 +82,7 @@ B站 API 采用 C/S 结构，大多数接口为 REST API 和 gRPC，少部分接
         - [x] [短信登录](docs/login/login_action/SMS.md)
         - [x] [密码登录](docs/login/login_action/password.md)
         - [x] [二维码登录](docs/login/login_action/QR.md)
+        - [x] [APP 端令牌管理](docs/login/login_action/token.md)
         - [ ] SNS 登录 (QQ & 微信 & 微博)
     - [x] [登录基本信息](docs/login/login_info.md)
     - [x] [个人中心](docs/login/member_center.md)
@@ -134,6 +135,7 @@ B站 API 采用 C/S 结构，大多数接口为 REST API 和 gRPC，少部分接
     - [x] [时间轴](docs/bangumi/timeline.md)
     - [x] [索引](docs/bangumi/season_index.md)
     - [x] [追番相关](docs/bangumi/follow.md)
+    - [x] [短评](docs/bangumi/review.md)
     - [ ] 状态数
     - [ ] 操作
 - [x] [视频弹幕](docs/danmaku)
@@ -144,7 +146,7 @@ B站 API 采用 C/S 结构，大多数接口为 REST API 和 gRPC，少部分接
     - [x] [快照](docs/danmaku/snapshot.md)
     - [x] [弹幕操作](docs/danmaku/action.md)
     - [ ] 高级弹幕
-    - [ ] 屏蔽管理
+    - [x] [屏蔽管理](docs/danmaku/filter.md)
     - [x] [智能防挡弹幕](docs/danmaku/webmask.md)
     - [x] [弹幕个人配置修改](docs/danmaku/config.md)
     - [x] [名词解释](docs/danmaku/buzzword.md)

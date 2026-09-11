@@ -3223,3 +3223,51 @@ curl -G 'https://app.bilibili.com/x/v2/feed/index'
 | message | str | 错误信息 | 默认为0                 |
 | ttl     | num | 1    |                      |
 | data    | obj |      |                      |
+
+## 推荐视频不喜欢反馈_app端
+
+> https://app.biliapi.net/x/feed/dislike
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+用于首页推荐 feed 的"不喜欢"反馈
+
+**url参数：**
+
+| 参数名    | 类型 | 内容           | 必要性 | 备注                     |
+| --------- | ---- | -------------- | ------ | ------------------------ |
+| goto      | str  | 条目跳转类型   | 必要   | 视频为 `av`              |
+| id        | num  | 条目 id        | 必要   | 视频为 avid              |
+| mid       | num  | 当前用户 mid   | 必要   |                          |
+| rid       | num  | （？）         | 非必要 | 作用尚不明确             |
+| reason_id | num  | 不喜欢理由 id  | 必要   | 与推荐返回的理由列表对应 |
+| tag_id    | num  | （？）         | 非必要 | 作用尚不明确             |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注           |
+| ------- | ---- | -------- | -------------- |
+| code    | num  | 返回值   | 0：成功        |
+| message | str  | 错误信息 |                |
+| data    | obj  | 信息本体 | 响应结构待补充 |
+
+**示例：**
+
+```shell
+curl -G 'https://app.biliapi.net/x/feed/dislike' \
+  --data-urlencode 'goto=av' \
+  --data-urlencode 'id=xxx' \
+  --data-urlencode 'mid=xxx' \
+  --data-urlencode 'reason_id=1' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```

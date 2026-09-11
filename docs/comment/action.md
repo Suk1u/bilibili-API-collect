@@ -533,3 +533,41 @@ curl 'https://api.bilibili.com/x/v2/reply/report' \
 ```
 
 </details>
+
+## 申诉评论
+
+> https://api.bilibili.com/x/v2/reply/appeal/submit
+
+*请求方式：POST*
+
+认证方式：Cookie（SESSDATA）
+
+**正文参数（multipart/form-data）：**
+
+| 参数名 | 类型 | 内容       | 必要性 | 备注   |
+| ------ | ---- | ---------- | ------ | ------ |
+| type   | num  | 评论区类型 | 必要   | 固定为 `1` |
+| reason | str  | 申诉理由   | 必要   |        |
+| oid    | num  | 目标评论区 id | 必要 | 与被申诉评论所在视频/动态的 oid 一致 |
+| csrf   | str  | csrf token | 必要   | 位于 Cookie 中的 bili_jct |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注           |
+| ------- | ---- | -------- | -------------- |
+| code    | num  | 返回值   | 0：成功        |
+| message | str  | 错误信息 |                |
+| data    | obj  | 信息本体 | 响应结构待补充 |
+
+**示例：**
+
+```shell
+curl -X POST 'https://api.bilibili.com/x/v2/reply/appeal/submit' \
+  -F 'type=1' \
+  -F 'reason=xxx' \
+  -F 'oid=xxx' \
+  -F 'csrf=xxx' \
+  -b 'SESSDATA=xxx'
+```

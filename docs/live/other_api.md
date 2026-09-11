@@ -628,3 +628,427 @@
 | 字段 | 类型 | 内容 | 备注 |
 | ---- | ---- | ---- | ---- |
 | timestamp | num | 服务器时间戳 | 13位毫秒时间戳，用于大乱斗功能的时间校验 |
+
+---
+
+## 参与天选抽奖
+
+> https://api.live.bilibili.com/xlive/lottery-interface/v1/Anchor/Join
+
+*请求方式：POST*
+
+认证方式：Cookie（SESSDATA）
+
+鉴权方式：Cookie中`bili_jct`的值正确并与`csrf`相同
+
+参与直播间天选时刻抽奖；需要携带 Cookie `buvid3`
+
+**正文参数 (application/x-www-form-urlencoded)：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| room_id | num | 直播间id | 必要 | |
+| id | num | 天选抽奖id | 必要 | |
+| platform | str | 平台 | 必要 | 固定为 `pc` |
+| csrf | str | CSRF Token（位于cookie） | 必要 | |
+| gift_id | num | 礼物id | 非必要 | 弹幕抽奖需要赠送指定礼物时使用 |
+| gift_num | num | 礼物数量 | 非必要 | 弹幕抽奖需要赠送指定礼物时使用 |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | 响应结构待补充 |
+
+**示例：**
+
+参与直播间 `22637261` 的 `id=xxx` 天选抽奖
+
+```shell
+curl 'https://api.live.bilibili.com/xlive/lottery-interface/v1/Anchor/Join' \
+  -b 'SESSDATA=xxx;bili_jct=xxx;buvid3=xxx' \
+  --data-urlencode 'room_id=22637261' \
+  --data-urlencode 'id=xxx' \
+  --data-urlencode 'platform=pc' \
+  --data-urlencode 'csrf=xxx'
+```
+
+---
+
+## 查询高能榜贡献_app端
+
+> https://api.live.bilibili.com/xlive/general-interface/v1/rank/queryContributionRank
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key）
+
+需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+| room_id | num | 直播间id | 必要 | |
+| ruid | num | 主播用户mid | 必要 | |
+| type | str | 榜单类型 | 必要 | 目前仅发现为 `online_rank` |
+| switch | str | 榜单开关类型 | 必要 | 目前仅发现为 `contribution_rank` |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| item | array | 高能用户贡献榜列表 | |
+
+`data.item`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| rank | num | 排名 | |
+| uid | num | 用户mid | |
+| uname | str | 用户名 | |
+| name | str | 用户名 | 与 `uname` 相同 |
+| face | str | 用户头像url | |
+| score | num | 贡献值 | |
+| medal_name | str | 粉丝勋章名 | 佩戴粉丝勋章时存在 |
+| level | str | 勋章等级？ | 作用尚不明确 |
+| color | str | 勋章颜色？ | 作用尚不明确 |
+
+**示例：**
+
+查询直播间 `22637261` 的高能用户贡献榜
+
+```shell
+curl -G 'https://api.live.bilibili.com/xlive/general-interface/v1/rank/queryContributionRank' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'room_id=22637261' \
+  --data-urlencode 'ruid=xxx' \
+  --data-urlencode 'type=online_rank' \
+  --data-urlencode 'switch=contribution_rank' \
+  --data-urlencode 'sign=xxx'
+```
+
+---
+
+## 获取房间勋章排名_app端
+
+> https://api.live.bilibili.com/rankdb/v2/RoomRank/mobileMedalRank
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key）
+
+获取直播间粉丝榜（粉丝勋章排名），需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+| page | num | 页码 | 必要 | 默认为 `1` |
+| roomid | num | 直播间id | 必要 | |
+| ruid | num | 主播用户mid | 必要 | |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| list | array | 粉丝榜列表 | |
+| total_page | num | 总页数 | |
+
+`data.list`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| rank | num | 排名 | |
+| uid | num | 用户mid | |
+| uname | str | 用户名 | |
+| name | str | 用户名 | 与 `uname` 相同 |
+| face | str | 用户头像url | |
+| score | num | 亲密度（勋章积分） | |
+| medal_name | str | 粉丝勋章名 | |
+| level | str | 勋章等级？ | 作用尚不明确 |
+| color | str | 勋章颜色？ | 作用尚不明确 |
+
+**示例：**
+
+查询直播间 `22637261` 第 `1` 页的粉丝榜
+
+```shell
+curl -G 'https://api.live.bilibili.com/rankdb/v2/RoomRank/mobileMedalRank' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'page=1' \
+  --data-urlencode 'roomid=22637261' \
+  --data-urlencode 'ruid=xxx' \
+  --data-urlencode 'sign=xxx'
+```
+
+---
+
+## 获取用户直播名片_app端
+
+> https://api.live.bilibili.com/live_user/v1/card/card_up
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key）
+
+需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+| uid | num | 目标用户mid | 必要 | |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 主打名片信息 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| uid | num | 主播mid | |
+| uname | str | 主播用户名 | |
+| face | str | 主播头像url | |
+| verify_type | num | 认证类型 | -1：无<br />0：个人认证<br />1：机构认证 |
+| desc | str | 认证信息 | |
+| level | num | 直播等级 | |
+| level_color | num | 等级颜色 | |
+| main_vip | num | 是否大会员 | |
+| uname_color | num | 用户名颜色 | |
+| room_id | num | 直播间id | |
+| area_name | str | 直播分区名 | |
+| pendant | str | 直播间头像框url | |
+| pendant_from | num | （？） | 作用尚不明确 |
+| glory_info | array | 荣誉信息列表 | |
+| pk_info | array | 赛季信息列表 | |
+| season_info_url | str | 赛季信息页面url | |
+| follow_num | num | 粉丝数 | |
+| is_fans | bool | 当前用户是否为其粉丝 | |
+| relation_status | num | 与当前用户的关系 | 大于 `1` 表示已关注 |
+
+`glory_info`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| gid | str | 荣誉id | |
+| name | str | 荣誉名称 | |
+| activity_name | str | 活动名称 | |
+| activity_date | str | 活动日期 | |
+| pic_url | str | 荣誉图片url | |
+| jump_url | str | 跳转链接 | |
+
+`pk_info`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| season_id | num | 赛季id | |
+| season_name | str | 赛季名称 | |
+| season_date_start | str | 赛季开始日期 | |
+| season_date_end | str | 赛季结束日期 | |
+| pk_rank_name | str | 赛季排名名称 | |
+| first_pic_url | str | 赛季图片url | |
+| pk_rank_star | num | 赛季星级 | |
+| second_rank_icon | str | 排名图标url | |
+| rank_info_url_app | str | 排名详情页url | |
+
+**示例：**
+
+查询 `mid=672328094` 的用户直播名片
+
+```shell
+curl -G 'https://api.live.bilibili.com/live_user/v1/card/card_up' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'uid=672328094' \
+  --data-urlencode 'sign=xxx'
+```
+
+---
+
+## 获取SuperChat醒目留言列表_app端
+
+> https://api.live.bilibili.com/av/v1/SuperChat/getMessageList
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key）
+
+需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+| room_id | num | 直播间id | 必要 | |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| list | array | 醒目留言列表 | |
+
+`data.list`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| id | num | 醒目留言id | |
+| uid | num | 发送者用户mid | |
+| background_image | str | 背景图片url | |
+| background_color | str | 背景颜色 | |
+| background_icon | str | 背景图标url | |
+| background_bottom_color | str | 底部背景颜色 | |
+| background_price_color | str | 价格背景颜色 | |
+| font_color | str | 字体颜色 | |
+| price | num | 留言金额 | 单位：元 |
+| rate | num | 汇率？ | 作用尚不明确 |
+| time | num | 剩余展示时间 | 单位：秒 |
+| start_time | num | 开始展示时间 | 相对开播的秒数？ |
+| end_time | num | 结束展示时间 | 相对开播的秒数？ |
+| message | str | 留言内容 | |
+| trans_mark | num | 是否有翻译 | 0：无<br />1：有 |
+| message_trans | str | 翻译后的留言内容 | |
+| ts | num | 发送时间 | Unix 秒时间戳 |
+| token | str | （？） | 作用尚不明确 |
+| user_info | obj | 发送者信息 | |
+
+`user_info`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| uname | str | 发送者用户名 | |
+| face | str | 发送者头像url | |
+| face_frame | str | 发送者头像框url | |
+| guard_level | num | 大航海等级 | 0：无<br />1：总督<br />2：提督<br />3：舰长 |
+| user_level | num | 用户等级 | |
+| is_vip | num | 是否vip | |
+| is_svip | num | 是否svip | |
+| is_main_vip | num | 是否大会员 | |
+
+**示例：**
+
+查询直播间 `22637261` 的醒目留言列表
+
+```shell
+curl -G 'https://api.live.bilibili.com/av/v1/SuperChat/getMessageList' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'room_id=22637261' \
+  --data-urlencode 'sign=xxx'
+```
+
+---
+
+## 查询直播钱包_app端
+
+> https://api.live.bilibili.com/pay/v2/Pay/myWallet
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key）
+
+需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 钱包信息 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------ | ---- | ---- | ---- |
+| gold | num | 金瓜子余额 | |
+| silver | num | 银瓜子余额 | |
+
+**示例：**
+
+```shell
+curl -G 'https://api.live.bilibili.com/pay/v2/Pay/myWallet' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'sign=xxx'
+```

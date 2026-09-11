@@ -133,3 +133,65 @@ curl -G 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLot
 ```
 
 </details>
+
+---
+
+## 抢人气红包
+
+> https://api.live.bilibili.com/xlive/lottery-interface/v1/popularityRedPocket/RedPocketDraw
+
+*请求方式：POST*
+
+认证方式：Cookie（SESSDATA）
+
+鉴权方式：Cookie中`bili_jct`的值正确并与`csrf`相同
+
+参与直播间人气红包抽奖
+
+**url参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------- | ---- | ---------------- | ------ | ---- |
+| csrf | str | CSRF Token（位于cookie） | 必要 | |
+
+**正文参数 (application/x-www-form-urlencoded)：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------- | ---- | ---------------- | ------ | ---- |
+| uid | num | 当前用户mid | 必要 | |
+| room_id | num | 直播间id | 必要 | |
+| ruid | num | 主播用户mid | 必要 | |
+| lot_id | num | 红包抽奖id | 必要 | 可通过[获取指定直播间的红包信息](#获取指定直播间的红包信息)获得 |
+| ts | num | 当前时间 | 必要 | Unix 秒时间戳 |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型   | 内容       | 备注          |
+| ------- | ------ | ---------- | ------------- |
+| code    | num    | 返回值     | 0：成功       |
+| message | str    | 错误信息   | |
+| data    | obj | 参与结果 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| join_status | num | 参与状态 | 1：参与成功 |
+
+注：`data` 中其余字段作用尚不明确，响应结构待补充
+
+**示例：**
+
+参与直播间 `24146996` 的 `lot_id=622474` 人气红包
+
+```shell
+curl 'https://api.live.bilibili.com/xlive/lottery-interface/v1/popularityRedPocket/RedPocketDraw?csrf=xxx' \
+  -b 'SESSDATA=xxx;bili_jct=xxx' \
+  --data-urlencode 'uid=xxx' \
+  --data-urlencode 'room_id=24146996' \
+  --data-urlencode 'ruid=xxx' \
+  --data-urlencode 'lot_id=622474' \
+  --data-urlencode 'ts=1234567890'
+```

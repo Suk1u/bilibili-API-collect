@@ -569,3 +569,290 @@ curl -G 'https://api.bilibili.com/x/v3/fav/resource/infos' \
 ```
 
 </details>
+
+## 查询用户收藏夹列表（他人空间）
+
+> https://api.bilibili.com/x/v3/fav/folder/space/v2
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+一次性返回目标用户创建的收藏夹与收藏的收藏夹
+
+**url参数：**
+
+| 参数名 | 类型 | 内容        | 必要性 | 备注 |
+| ------ | ---- | ----------- | ------ | ---- |
+| up_mid | num  | 目标用户mid | 必要   |      |
+
+除此之外还需传入 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），详见 [APP API 签名](../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 | 默认为0 |
+| data    | obj  | 信息本体 |         |
+
+`data`对象：
+
+| 字段           | 类型  | 内容                 | 备注                                                           |
+| -------------- | ----- | -------------------- | -------------------------------------------------------------- |
+| space_infos    | array | 收藏夹信息分组列表   | `space_infos[0]` 为创建的收藏夹<br />`space_infos[1]` 为收藏的收藏夹 |
+| default_folder | obj   | 默认收藏夹信息       |                                                                |
+
+`data`中的`space_infos`数组：
+
+| 项   | 类型 | 内容             | 备注 |
+| ---- | ---- | ---------------- | ---- |
+| 0    | obj  | 创建的收藏夹分组 |      |
+| 1    | obj  | 收藏的收藏夹分组 |      |
+
+`space_infos`数组中的对象：
+
+| 字段              | 类型 | 内容       | 备注 |
+| ----------------- | ---- | ---------- | ---- |
+| mediaListResponse | obj  | 收藏夹列表 |      |
+
+`space_infos`数组中的对象的`mediaListResponse`对象：
+
+| 字段     | 类型  | 内容           | 备注         |
+| -------- | ----- | -------------- | ------------ |
+| list     | array | 收藏夹列表     |              |
+| has_more | bool  | 是否还有下一页 |              |
+
+`mediaListResponse`中的`list`数组中的对象：
+
+| 字段        | 类型 | 内容                 | 备注                                           |
+| ----------- | ---- | -------------------- | ---------------------------------------------- |
+| id          | num  | 收藏夹mlid（完整id） | 收藏夹原始id+创建者mid尾号2位                  |
+| fid         | num  | 收藏夹原始id         |                                                |
+| mid         | num  | 创建者mid            |                                                |
+| attr        | num  | 收藏夹属性           | [同上 attr](#获取指定用户创建的所有收藏夹信息) |
+| title       | str  | 收藏夹标题           |                                                |
+| cover       | str  | 收藏夹封面图片url    |                                                |
+| intro       | str  | 收藏夹简介           |                                                |
+| type        | num  | 收藏夹类型           |                                                |
+| media_count | num  | 收藏夹内容数量       |                                                |
+| fav_state   | num  | 收藏夹收藏状态       | 已收藏收藏夹：1<br />未收藏收藏夹：0            |
+| like_state  | num  | 收藏夹点赞状态       | 已点赞：1<br />未点赞：0                        |
+
+`data`中的`default_folder`对象：
+
+| 字段          | 类型 | 内容       | 备注                     |
+| ------------- | ---- | ---------- | ------------------------ |
+| folder_detail | obj  | 默认收藏夹 | 字段同`list`数组中的对象 |
+
+**示例：**
+
+查询用户`mid=7792521`的收藏夹列表
+
+```shell
+curl -G 'https://api.bilibili.com/x/v3/fav/folder/space/v2' \
+--data-urlencode 'up_mid=7792521' \
+--data-urlencode 'access_key=xxx' \
+--data-urlencode 'appkey=xxx' \
+--data-urlencode 'build=xxx' \
+--data-urlencode 'mobi_app=android' \
+--data-urlencode 'platform=android' \
+--data-urlencode 'ts=0' \
+--data-urlencode 'sign=xxx'
+```
+
+## 查询用户收藏季节列表
+
+> https://api.bilibili.com/x/space/fav/season/list
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+分页查询指定收藏合集（季节）内的内容
+
+**url参数：**
+
+| 参数名    | 类型 | 内容          | 必要性 | 备注                     |
+| --------- | ---- | ------------- | ------ | ------------------------ |
+| season_id | num  | 目标合集id    | 必要   |                          |
+| mid       | num  | 合集创建者mid | 必要   |                          |
+| keyword   | str  | 搜索关键字    | 非必要 | 默认为空                 |
+| pn        | num  | 页码          | 非必要 | 默认为 1                 |
+| ps        | num  | 每页项数      | 非必要 | 默认为 20                |
+
+除此之外还需传入 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），详见 [APP API 签名](../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 | 默认为0 |
+| data    | obj  | 信息本体 |         |
+
+`data`对象：
+
+| 字段   | 类型  | 内容         | 备注 |
+| ------ | ----- | ------------ | ---- |
+| info   | obj   | 合集信息     |      |
+| medias | array | 合集内容列表 |      |
+
+`data`中的`info`对象：
+
+| 字段        | 类型 | 内容                 | 备注                                           |
+| ----------- | ---- | -------------------- | ---------------------------------------------- |
+| id          | num  | 收藏夹mlid（完整id） | 收藏夹原始id+创建者mid尾号2位                  |
+| fid         | num  | 收藏夹原始id         |                                                |
+| mid         | num  | 创建者mid            |                                                |
+| attr        | num  | 收藏夹属性           | [同上 attr](#获取指定用户创建的所有收藏夹信息) |
+| title       | str  | 合集标题             |                                                |
+| cover       | str  | 合集封面图片url      |                                                |
+| type        | num  | 合集类型             |                                                |
+| media_count | num  | 合集内容数量         |                                                |
+| fav_state   | num  | 收藏夹收藏状态       | 已收藏收藏夹：1<br />未收藏收藏夹：0            |
+| like_state  | num  | 收藏夹点赞状态       | 已点赞：1<br />未点赞：0                        |
+| upper       | obj  | 创建者信息           |                                                |
+
+`info`中的`upper`对象：
+
+| 字段 | 类型 | 内容          | 备注 |
+| ---- | ---- | ------------- | ---- |
+| mid  | num  | 创建者mid     |      |
+| name | str  | 创建者昵称    |      |
+| face | str  | 创建者头像url |      |
+
+`data`中的`medias`数组：
+
+| 项   | 类型 | 内容          | 备注 |
+| ---- | ---- | ------------- | ---- |
+| 0    | obj  | 合集内容1     |      |
+| n    | obj  | 合集内容(n+1) |      |
+| ……   | obj  | ……            | ……   |
+
+`medias`数组中的对象：
+
+| 字段     | 类型 | 内容        | 备注                        |
+| -------- | ---- | ----------- | --------------------------- |
+| id       | num  | 内容id      | 视频稿件：视频稿件avid      |
+| title    | str  | 内容标题    |                             |
+| cover    | str  | 封面图片url |                             |
+| duration | num  | 时长        | 单位为秒                    |
+| upper    | obj  | UP主信息    | 字段同`info`中的`upper`对象 |
+| cnt_info | obj  | 状态数      |                             |
+
+`medias`数组中的对象的`cnt_info`对象：
+
+| 字段    | 类型 | 内容   | 备注 |
+| ------- | ---- | ------ | ---- |
+| collect | num  | 收藏数 |      |
+| play    | num  | 播放数 |      |
+| danmaku | num  | 弹幕数 |      |
+| coin    | num  | 投币数 |      |
+| reply   | num  | 评论数 |      |
+| share   | num  | 分享数 |      |
+
+**示例：**
+
+查询合集`id=12345`（创建者mid为`7792521`）的内容列表
+
+```shell
+curl -G 'https://api.bilibili.com/x/space/fav/season/list' \
+--data-urlencode 'season_id=12345' \
+--data-urlencode 'mid=7792521' \
+--data-urlencode 'pn=1' \
+--data-urlencode 'ps=20' \
+--data-urlencode 'access_key=xxx' \
+--data-urlencode 'appkey=xxx' \
+--data-urlencode 'build=xxx' \
+--data-urlencode 'mobi_app=android' \
+--data-urlencode 'platform=android' \
+--data-urlencode 'ts=0' \
+--data-urlencode 'sign=xxx'
+```
+
+## 查询已创建的收藏夹（medialist网关）
+
+> https://api.bilibili.com/medialist/gateway/base/created
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+分页查询目标用户已创建的收藏夹，可附带目标内容以标记其所在收藏夹
+
+**url参数：**
+
+| 参数名 | 类型 | 内容         | 必要性 | 备注                              |
+| ------ | ---- | ------------ | ------ | --------------------------------- |
+| up_mid | num  | 目标用户mid  | 必要   |                                   |
+| rid    | num  | 目标内容id   | 非必要 | 可为空<br />视频稿件：视频稿件avid |
+| type   | num  | 目标内容属性 | 非必要 | 2：视频稿件                       |
+| pn     | num  | 页码         | 非必要 | 默认为 1                          |
+| ps     | num  | 每页项数     | 非必要 | 默认为 100                        |
+
+除此之外还需传入 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），详见 [APP API 签名](../misc/sign/APP.md)
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 | 默认为0 |
+| data    | obj  | 信息本体 |         |
+
+`data`对象：
+
+| 字段 | 类型  | 内容       | 备注 |
+| ---- | ----- | ---------- | ---- |
+| list | array | 收藏夹列表 |      |
+
+`data`中的`list`数组：
+
+| 项   | 类型 | 内容        | 备注 |
+| ---- | ---- | ----------- | ---- |
+| 0    | obj  | 收藏夹1     |      |
+| n    | obj  | 收藏夹(n+1) |      |
+| ……   | obj  | ……          | ……   |
+
+`list`数组中的对象：
+
+| 字段        | 类型 | 内容                     | 备注                                           |
+| ----------- | ---- | ------------------------ | ---------------------------------------------- |
+| id          | num  | 收藏夹mlid（完整id）     | 收藏夹原始id+创建者mid尾号2位                  |
+| fid         | num  | 收藏夹原始id             |                                                |
+| mid         | num  | 创建者mid                |                                                |
+| attr        | num  | 收藏夹属性               | [同上 attr](#获取指定用户创建的所有收藏夹信息) |
+| title       | str  | 收藏夹标题               |                                                |
+| cover       | str  | 收藏夹封面图片url        |                                                |
+| intro       | str  | 收藏夹简介               |                                                |
+| type        | num  | 收藏夹类型               |                                                |
+| media_count | num  | 收藏夹内容数量           |                                                |
+| fav_state   | num  | 目标id是否存在于该收藏夹 | 传入`rid`时有效                                |
+| like_state  | num  | 收藏夹点赞状态           | 已点赞：1<br />未点赞：0                        |
+
+**示例：**
+
+查询用户`mid=7792521`已创建的收藏夹（附带视频稿件`av85440373`）
+
+```shell
+curl -G 'https://api.bilibili.com/medialist/gateway/base/created' \
+--data-urlencode 'up_mid=7792521' \
+--data-urlencode 'rid=85440373' \
+--data-urlencode 'type=2' \
+--data-urlencode 'pn=1' \
+--data-urlencode 'ps=100' \
+--data-urlencode 'access_key=xxx' \
+--data-urlencode 'appkey=xxx' \
+--data-urlencode 'build=xxx' \
+--data-urlencode 'mobi_app=android' \
+--data-urlencode 'platform=android' \
+--data-urlencode 'ts=0' \
+--data-urlencode 'sign=xxx'
+```

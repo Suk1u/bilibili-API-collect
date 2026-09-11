@@ -502,3 +502,306 @@ curl  'https://api.live.bilibili.com/xlive/general-interface/v1/blindFirstWin/ge
 | origin_info | obj | 来源信息 | |
 | official_info | obj | 认证信息 | |
 | name_color_str | str | 名字颜色字符串 | |
+
+---
+
+## 获取礼物全局配置_app端
+
+> https://api.live.bilibili.com/gift/v4/Live/giftConfig
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key）
+
+需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**url参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------- | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+| area_v2_id | num | 直播子分区id | 必要 | |
+| area_v2_parent_id | num | 直播父分区id | 必要 | |
+| roomid | num | 直播间id | 必要 | |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------- | ---- | -------- | ------- |
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 礼物配置 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| list | array | 全部礼物列表 | |
+
+`data.list`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| id | num | 礼物id | |
+| name | str | 礼物名称 | |
+| price | num | 礼物单价 | 单位为金瓜子（1000 金瓜子 = 1 元） |
+| type | num | 礼物类型 | |
+| coin_type | str | 货币类型 | `gold`：金瓜子<br />`silver`：银瓜子 |
+| bag_gift | num | 是否背包礼物 | 0：否<br />1：是 |
+| effect | num | 特效类型？ | 作用尚不明确 |
+| corner_mark | str | 角标文案 | |
+| corner_background | str | 角标背景图 | |
+| broadcast | num | （？） | 作用尚不明确 |
+| draw | num | （？） | 作用尚不明确 |
+| stay_time | num | 礼物展示时间 | 单位：秒？ |
+| animation_frame_num | num | 动画帧数 | |
+| desc | str | 礼物描述 | |
+| rule | str | 礼物规则 | |
+| rights | str | 礼物权益 | |
+| privilege_required | num | 所需特权 | |
+| count_map | array | 便捷发送数量列表？ | 作用尚不明确 |
+| img_basic | str | 礼物图片 | |
+| img_dynamic | str | 礼物动态图 | |
+| frame_animation | str | 逐帧动画资源 | |
+| gif | str | 礼物gif动画 | |
+| webp | str | 礼物webp动图 | |
+| full_sc_web | str | 全屏特效资源（web） | |
+| full_sc_horizontal | str | 全屏特效资源（横屏） | |
+| full_sc_vertical | str | 全屏特效资源（竖屏） | |
+| full_sc_horizontal_svga | str | 全屏SVGA特效（横屏） | |
+| full_sc_vertical_svga | str | 全屏SVGA特效（竖屏） | |
+| bullet_head | str | 弹幕头部图片 | |
+| bullet_tail | str | 弹幕尾部图片 | |
+| limit_interval | num | 发送间隔限制 | 单位：秒 |
+| bind_ruid | num | 绑定主播mid | 未绑定为 `0` |
+| bind_roomid | num | 绑定直播间id | 未绑定为 `0` |
+| bag_coin_type | num | 背包货币类型 | |
+| broadcast_id | num | （？） | 作用尚不明确 |
+| draw_id | num | （？） | 作用尚不明确 |
+| gift_type | num | （？） | 作用尚不明确 |
+| weight | num | 权重 | |
+| max_send_limit | num | 单次发送上限 | `0` 为不限制 |
+| combo_resources_id | num | 连击资源id | |
+| goods_id | num | 商品id | |
+
+注：以上字段来自第三方客户端 biliuwp-lite 的礼物模型，响应中可能还存在其他字段，响应结构待补充
+
+**示例：**
+
+```shell
+curl -G 'https://api.live.bilibili.com/gift/v4/Live/giftConfig' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'area_v2_id=371' \
+  --data-urlencode 'area_v2_parent_id=9' \
+  --data-urlencode 'roomid=22637261' \
+  --data-urlencode 'sign=xxx'
+```
+
+---
+
+## 获取房间礼物列表_app端
+
+> https://api.live.bilibili.com/gift/v3/live/room_gift_list
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key）
+
+返回直播间内可赠送的礼物id列表，需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**url参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------- | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+| area_v2_id | num | 直播子分区id | 必要 | |
+| area_v2_parent_id | num | 直播父分区id | 必要 | |
+| roomid | num | 直播间id | 必要 | |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------- | ---- | -------- | ------- |
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 房间礼物列表 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| list | array | 房间礼物id列表 | |
+
+`data.list`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| position | num | 礼物面板位置序号 | |
+| gift_id | num | 礼物id | |
+| id | num | 列表项id | |
+| plan_id | num | 礼物面板方案id | |
+
+**示例：**
+
+```shell
+curl -G 'https://api.live.bilibili.com/gift/v3/live/room_gift_list' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'area_v2_id=371' \
+  --data-urlencode 'area_v2_parent_id=9' \
+  --data-urlencode 'roomid=22637261' \
+  --data-urlencode 'sign=xxx'
+```
+
+---
+
+## 获取背包礼物列表_app端
+
+> https://api.live.bilibili.com/xlive/app-room/v1/gift/bag_list
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key）
+
+需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**url参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------- | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+| roomid | num | 直播间id | 必要 | |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------- | ---- | -------- | ------- |
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 背包信息 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| list | array | 背包礼物列表 | |
+
+`data.list`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| bag_id | num | 背包id | 赠送背包礼物时使用 |
+| gift_id | num | 礼物id | |
+| gift_name | str | 礼物名称 | |
+| gift_type | num | 礼物类型 | |
+| gift_num | num | 礼物数量 | |
+| type | num | （？） | 作用尚不明确 |
+| card_gif | str | 礼物动画图 | |
+| corner_mark | str | 角标文案 | |
+| expire_at | num | 过期时间 | Unix 秒时间戳 |
+| img | str | 礼物图片 | |
+
+**示例：**
+
+```shell
+curl -G 'https://api.live.bilibili.com/xlive/app-room/v1/gift/bag_list' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'roomid=22637261' \
+  --data-urlencode 'sign=xxx'
+```
+
+---
+
+## 赠送背包礼物
+
+> https://api.live.bilibili.com/xlive/revenue/v1/gift/sendBag
+
+*请求方式：POST*
+
+认证方式：Cookie（SESSDATA）
+
+鉴权方式：APP（access_key）
+
+正文需附带 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**正文参数 (application/x-www-form-urlencoded)：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------- | ---- | ---- | ------ | ---- |
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+| biz_code | str | 业务代码 | 必要 | 固定为 `live` |
+| biz_id | num | 直播间id | 必要 | |
+| gift_id | num | 礼物id | 必要 | |
+| gift_num | num | 赠送数量 | 必要 | |
+| price | num | 礼物单价 | 必要 | 背包礼物固定为 `0` |
+| bag_id | num | 背包id | 必要 | |
+| rnd | num | 随机数 | 必要 | 客户端使用毫秒时间戳 |
+| ruid | num | 主播用户mid | 必要 | |
+| uid | num | 发送者用户mid | 必要 | |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ------- | ---- | -------- | ------- |
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 赠送结果 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| send_tips | str | 赠送提示文案 | |
+
+注：`data` 中其余字段作用尚不明确，响应结构待补充
+
+**示例：**
+
+赠送直播间 `22637261` 背包中（`bag_id=xxx`）的 `1` 个礼物
+
+```shell
+curl 'https://api.live.bilibili.com/xlive/revenue/v1/gift/sendBag' \
+  -b 'SESSDATA=xxx' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'sign=xxx' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'biz_code=live' \
+  --data-urlencode 'biz_id=22637261' \
+  --data-urlencode 'gift_id=xxx' \
+  --data-urlencode 'gift_num=1' \
+  --data-urlencode 'price=0' \
+  --data-urlencode 'bag_id=xxx' \
+  --data-urlencode 'rnd=1234567890123' \
+  --data-urlencode 'ruid=xxx' \
+  --data-urlencode 'uid=xxx'
+```

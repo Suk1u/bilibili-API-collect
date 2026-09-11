@@ -1984,3 +1984,39 @@ curl -X POST --url "https://api.bilibili.com/x/series/series/update" \
 ```
 
 </details>
+
+## 查询用户合集与季节列表_app端
+
+> https://app.bilibili.com/x/polymer/space/seasons_series_list_mobile
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+**url参数：**
+
+| 参数名   | 类型 | 内容        | 必要性 | 备注        |
+| -------- | ---- | ----------- | ------ | ----------- |
+| mid      | num  | 目标用户 mid | 必要   |             |
+| page_num | num  | 页码        | 非必要 | 默认为 1    |
+| page_size | num | 每页数量    | 非必要 | 默认为 20   |
+
+**json回复：**
+
+响应结构与 [查询用户合集与季节列表](#查询用户合集与季节列表) 一致
+
+**示例：**
+
+```shell
+curl -G 'https://app.bilibili.com/x/polymer/space/seasons_series_list_mobile' \
+  --data-urlencode 'mid=293793435' \
+  --data-urlencode 'page_num=1' \
+  --data-urlencode 'page_size=20' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```

@@ -4482,3 +4482,55 @@ curl 'https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=2095
 ## 取消置顶动态
 
 参见 [取消置顶动态](action.md#取消置顶动态)
+
+## 获取用户空间动态_app端
+
+> https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history
+
+*请求方式：GET*
+
+鉴权方式：APP（access_key），需要 APP 签名，签名算法见 [APP API 签名](../misc/sign/APP.md)
+
+**url参数：**
+
+| 参数名           | 类型 | 内容                   | 必要性 | 备注                             |
+| ---------------- | ---- | ---------------------- | ------ | -------------------------------- |
+| host_uid         | num  | 目标用户 uid           | 必要   |                                  |
+| offset_dynamic_id | num | 起始动态 id            | 非必要 | 首页不传，翻页时传入上一次最后一条动态 id |
+| visitor_uid      | num  | 访客 uid               | 非必要 | 通常为当前登录用户 uid            |
+| need_top         | num  | 是否包含置顶动态       | 非必要 | 0：不包含<br>1：包含             |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注                           |
+| ------- | ---- | -------- | ------------------------------ |
+| code    | num  | 返回值   | 0：成功                        |
+| message | str  | 错误信息 | 成功时：0                      |
+| data    | obj  | 信息本体 | 响应结构待补充                 |
+
+`data` 对象：
+
+| 字段       | 类型   | 内容           | 备注                       |
+| ---------- | ------ | -------------- | -------------------------- |
+| cards      | array | 动态卡片列表   | 结构与 web 端动态卡片类似   |
+| has_more   | num    | 是否还有更多   | 0：无<br>1：有              |
+| next_offset | num   | 下次请求偏移   |                            |
+
+**示例：**
+
+```shell
+curl -G 'https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history' \
+  --data-urlencode 'host_uid=293793435' \
+  --data-urlencode 'offset_dynamic_id=0' \
+  --data-urlencode 'visitor_uid=xxx' \
+  --data-urlencode 'need_top=1' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=xxx' \
+  --data-urlencode 'sign=xxx'
+```

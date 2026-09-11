@@ -3277,3 +3277,198 @@ curl -G 'https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room'
 ```
 
 </details>
+
+## 获取直播间信息_app端
+
+> https://api.live.bilibili.com/xlive/app-room/v1/index/getInfoByRoom
+
+*请求方式: GET*
+
+鉴权方式：APP（access_key）
+
+需要 APP 签名，公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`）及签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**url参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+|---------|-----|------|-----|-------|
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+| room_id | num | 直播间id | 必要 | 可为短号 |
+| device | str | 设备类型 | 必要 | 固定为 `android` |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| room_info | obj | 直播间信息 | |
+| guard_info | obj | 大航海信息 | 特殊直播间可能不存在 |
+| anchor_info | obj | 主播信息 | |
+
+`data.room_info`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| uid | num | 主播mid | |
+| room_id | num | 直播间长号 | |
+| short_id | num | 直播间短号 | 为0是无短号 |
+| title | str | 直播间标题 | |
+| cover | str | 直播间封面url | |
+| tags | str | 直播间标签 | 以 `,` 分隔 |
+| background | str | 背景图片链接 | |
+| description | str | 直播间描述 | |
+| online | num | 人气值 | |
+| live_status | num | 直播状态 | 0：未开播<br />1：直播中<br />2：轮播中 |
+| live_start_time | num | 开播时间 | Unix 秒时间戳 |
+| live_screen_type | num | 直播画面类型 | 0：横屏<br />1：竖屏？ |
+| lock_status | num | 是否被封禁 | 0：正常<br />1：封禁 |
+| lock_time | num | 封禁结束时间 | Unix 秒时间戳 |
+| hidden_status | num | 是否被隐藏 | 0：正常<br />1：隐藏 |
+| hidden_time | num | 隐藏结束时间 | Unix 秒时间戳 |
+| area_id | num | 子分区id | |
+| area_name | str | 子分区名称 | |
+| parent_area_id | num | 父分区id | |
+| parent_area_name | str | 父分区名称 | |
+| keyframe | str | 关键帧图片url | 用于悬浮展示 |
+| special_type | num | 特殊直播间标志 | 0：普通直播间<br />1：付费直播间<br />2：拜年祭直播间 |
+| up_session | str | （？） | 作用尚不明确 |
+| pk_status | num | pk状态 | 0：无pk |
+| pendants | obj | 头像框/牌子信息 | |
+| on_voice_join | num | 连麦状态 | 0：未连麦 |
+| tv_screen_on | num | （？） | 作用尚不明确 |
+
+`data.room_info.pendants`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| frame | obj | 头像框 | |
+| badge | obj | 大v牌子 | |
+
+`data.room_info.pendants.frame`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| name | str | 头像框名称 | |
+| position | num | 位置 | |
+| value | str | 头像框图片url | |
+| desc | str | 描述 | |
+
+`data.guard_info`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| count | num | 大航海人数 | |
+| achievement_level | num | 主播大航海成就等级 | |
+
+`data.anchor_info`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| base_info | obj | 主播基本信息 | |
+| live_info | obj | 直播等级信息 | |
+| relation_info | obj | 关注信息 | |
+
+`data.anchor_info.base_info`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| uname | str | 主播用户名 | |
+| face | str | 主播头像url | |
+| gender | str | 主播性别 | |
+| official_info | obj | 认证信息 | |
+
+`data.anchor_info.base_info.official_info`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| role | num | 认证角色 | |
+| title | str | 认证名称 | |
+| desc | str | 认证描述 | |
+
+`data.anchor_info.live_info`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| level | num | 直播等级 | |
+| level_color | num | 等级颜色 | |
+
+`data.anchor_info.relation_info`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| attention | num | 是否关注该主播 | 0：未关注<br />1：已关注 |
+
+注: 响应中可能还存在其他字段，响应结构待补充
+
+**示例：**
+
+查询直播间 `room_id=1` 信息
+
+```shell
+curl -G 'https://api.live.bilibili.com/xlive/app-room/v1/index/getInfoByRoom' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'room_id=1' \
+  --data-urlencode 'device=android' \
+  --data-urlencode 'sign=xxx'
+```
+
+## 进入直播间
+
+> https://api.live.bilibili.com/room/v1/Room/room_entry_action
+
+*请求方式: POST*
+
+鉴权方式：APP（access_key）
+
+进入直播间时上报，用于触发进场特效、观看计时等
+
+正文需附带 APP 签名公共参数（`access_key`、`appkey`、`build`、`mobi_app`、`platform`、`ts`、`sign`），签名方法见 [APP 签名](../misc/sign/APP.md)，下表仅列出业务参数
+
+**正文参数 (application/x-www-form-urlencoded)：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+|---------|-----|------|-----|-------|
+| actionKey | str | 鉴权字段类型 | 必要 | 固定为 `appkey` |
+| room_id | num | 直播间id | 必要 | 可为短号 |
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+|---------|-----|------|-----------------|
+| code | num | 返回值 | 0：成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | 响应结构待补充 |
+
+**示例：**
+
+进入直播间 `room_id=1`
+
+```shell
+curl 'https://api.live.bilibili.com/room/v1/Room/room_entry_action' \
+  --data-urlencode 'access_key=xxx' \
+  --data-urlencode 'appkey=xxx' \
+  --data-urlencode 'build=xxx' \
+  --data-urlencode 'mobi_app=android' \
+  --data-urlencode 'platform=android' \
+  --data-urlencode 'ts=1234567890' \
+  --data-urlencode 'sign=xxx' \
+  --data-urlencode 'actionKey=appkey' \
+  --data-urlencode 'room_id=1'
+```
