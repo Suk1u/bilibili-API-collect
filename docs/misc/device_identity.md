@@ -136,6 +136,43 @@ let veri_code = format!("{:0>2x}", veri_code % 256);
 
 </details>
 
+## GAIA 网关风控上报
+
+> https://api.bilibili.com/x/internal/gaia-gateway/ExClimbCongLing
+
+*请求方式：POST*
+
+内部风控网关接口，与`ExClimbWuzhi`同族，Web端首页加载时上报加密的风控数据
+
+**正文参数（ application/json ）：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| header | obj | 加密头 | 必要 | 含`encode_type`、`payload_type`、加密后的密钥等字段 |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注      |
+| ------- | ---- | -------- | --------- |
+| code    | num  | 返回值   | 0：成功   |
+| message | str  | 错误信息 | 默认为 0  |
+| data    | obj  | 信息本体 | 空对象    |
+
+<details>
+<summary>查看响应示例：</summary>
+
+```json
+{
+    "code": 0,
+    "message": "0",
+    "data": {}
+}
+```
+
+</details>
+
 ## 前端数据收集
 
 > https://api.bilibili.com/x/web-frontend/data/collector

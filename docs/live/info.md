@@ -1211,8 +1211,10 @@ curl -G 'https://api.live.bilibili.com/live_user/v1/Master/info' \
 
 | 参数名 | 类型 | 内容 | 必要性 | 备注 |
 | ----- | ---- | --- | - | - |
-| req_biz | str | `web_room_componet` | 必要 | |
-| room_ids | num | 直播间短ID | 不必要 | 多个重复该参数即可 |
+| req_biz | str | 业务标识 | 必要 | 直播间页为`web_room_componet`<br />视频页查询UP主直播间为`video` |
+| room_ids | num | 直播间短ID | 不必要 | 多个重复该参数即可<br />与`uids`二选一 |
+| uids | num | 主播用户mid | 不必要 | 按主播查询其直播间<br />多个重复该参数即可<br />与`room_ids`二选一 |
+| use_cache | bool | 是否使用缓存 | 不必要 | `true` |
 
 **JSON回复:**
 
@@ -1229,7 +1231,7 @@ curl -G 'https://api.live.bilibili.com/live_user/v1/Master/info' \
 
 | 字段 | 类型 | 内容 | 备注 |
 | --- | --- | --- | --- |
-| by_uids | obj | 空 |  |
+| by_uids | obj | 按`uids`查询的直播间信息 | 无内容时为空 |
 | by_room_ids | obj | 直播间信息 |  |
 
 `data`中的`by_room_ids`对象:
@@ -1261,6 +1263,9 @@ curl -G 'https://api.live.bilibili.com/live_user/v1/Master/info' \
 | join_slide | num | 1 |  |
 | live_id | num | 0 |  |
 | live_id_str | str | "0" |  |
+| lock_status | num | 直播间封禁状态 | 0: 正常<br />1: 封禁中 |
+| hidden_status | num | 直播间隐藏状态 | 0: 正常<br />1: 隐藏中 |
+| is_encrypted | bool | 直播间是否加密 | 加密直播间需要密码进入 |
 
 **示例:**
 
@@ -2808,6 +2813,13 @@ curl -G 'https://api.live.bilibili.com/xlive/web-room/v1/dM/gethistory' \
 | dolby    | num | `5`   |     |                                                |
 | panorama | num | `1`   |     |                                                |
 | only_audio | num | 是否为音频流 | 非必要 | 默认为视频流，`1` 为音频流               |
+| hdr_type | str | HDR类型 | 非必要 | `0`: 非HDR<br/>`1`: HDR<br/>`6`: 杜比视界<br/>可多选, 使用英文逗号分隔<br/>web端请求携带 |
+| req_reason | num | 请求原因 | 非必要 | `0`<br/>web端请求携带 |
+| supported_drms | str | 支持的DRM类型 | 非必要 | 可多选, 使用英文逗号分隔<br/>web端请求携带 |
+| special_scenario | num | 特殊场景 | 非必要 | `2`<br/>web端请求携带 |
+| web_location | str | Web位置 | 非必要 |                                                |
+| w_rid    | str | Wbi 签名 | 非必要 | 详见 [Wbi 签名](../misc/sign/wbi.md)<br/>web端请求携带 |
+| wts      | num | 当前时间戳 | 非必要 | 详见 [Wbi 签名](../misc/sign/wbi.md)<br/>web端请求携带 |
 
 **json回复：**
 

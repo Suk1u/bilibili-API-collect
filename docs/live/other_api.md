@@ -1052,3 +1052,268 @@ curl -G 'https://api.live.bilibili.com/pay/v2/Pay/myWallet' \
   --data-urlencode 'actionKey=appkey' \
   --data-urlencode 'sign=xxx'
 ```
+
+---
+
+## 获取互动抽奖奖品列表
+
+> https://api.bilibili.com/x/lottery/x/gift
+
+*请求方式：GET*
+
+认证方式：Cookie
+
+直播间活动互动抽奖的奖品列表（活动以`sid`标识, 如电竞赛事直播间的抽奖）
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| sid | str | 抽奖场次ID | 必要 | |
+| csrf | str | CSRF令牌 | 必要 | 位于Cookie |
+
+**JSON回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | num | 错误信息 | 默认为 0 |
+| ttl | num | 1 | |
+| data | array | 奖品列表 | |
+
+`data`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| sid | str | 抽奖场次ID | |
+| award_info | obj | 奖品信息 | |
+
+`award_info`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| id | num | 奖品ID | |
+| activity_id | num | 活动ID | |
+| activity_name | str | 活动名称 | |
+| type | str | 奖品类型 | 如`Entity`(实物) |
+| name | str | 奖品名称 | |
+| icon | str | 奖品图片url | |
+| description | str | 奖品描述 | |
+| pre_check_ok | bool | 是否通过前置检查 | |
+| extra | null | 附加信息 | |
+| sid | str | 抽奖场次ID | |
+| reward_tag | str | 奖励标签 | |
+
+## 查询互动抽奖次数
+
+> https://api.bilibili.com/x/lottery/x/mytimes
+
+*请求方式：GET*
+
+认证方式：Cookie
+
+查询当前用户在指定抽奖场次可用的抽奖次数与积分
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| sid | str | 抽奖场次ID | 必要 | |
+| csrf | str | CSRF令牌 | 必要 | 位于Cookie |
+
+**JSON回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | num | 错误信息 | 默认为 0 |
+| ttl | num | 1 | |
+| data | obj | 信息本体 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| times | num | 剩余抽奖次数 | |
+| lottery_type | num | 抽奖类型 | 2: 积分抽奖 |
+| points | num | 当前积分 | |
+| points_per_time | num | 每次抽奖消耗积分 | |
+| intergral | str | 积分(字符串) | |
+| stime | num | 活动开始时间 | 10位Unix时间戳 |
+| etime | num | 活动结束时间 | 10位Unix时间戳 |
+
+## 获取互动抽奖中奖列表
+
+> https://api.bilibili.com/x/lottery/x/win/list
+
+*请求方式：GET*
+
+认证方式：Cookie
+
+获取指定抽奖场次的中奖名单
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| sid | str | 抽奖场次ID | 必要 | |
+| csrf | str | CSRF令牌 | 必要 | 位于Cookie |
+
+**JSON回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | num | 错误信息 | 默认为 0 |
+| ttl | num | 1 | |
+| data | array | 中奖列表 | |
+
+`data`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| name | str | 中奖用户名 | 已脱敏, 如`星**声` |
+| mid | num | 中奖用户mid | 通常为0 |
+| sid | str | 抽奖场次ID | |
+| ctime | num | 中奖时间 | 10位Unix时间戳 |
+| award_info | obj | 奖品信息 | 字段同[获取互动抽奖奖品列表](#获取互动抽奖奖品列表)中`award_info`对象 |
+
+## 批量查询直播任务状态
+
+> https://api.bilibili.com/x/task/totalv2
+
+*请求方式：GET*
+
+认证方式：Cookie
+
+直播间活动任务（如订阅赛程得抽奖次数）状态的批量查询
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| task_ids | str | 任务ID列表 | 必要 | 使用英文逗号分隔 |
+| csrf | str | CSRF令牌 | 必要 | 位于Cookie |
+| web_location | str | Web位置 | 非必要 | |
+
+**JSON回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | num | 错误信息 | 默认为 0 |
+| ttl | num | 1 | |
+| data | obj | 信息本体 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| list | array | 任务列表 | |
+| task_refresh_conf | obj | 任务刷新配置 | |
+
+`data.list`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| task_id | str | 任务ID | |
+| task_name | str | 任务名称 | |
+| counter | array | 计数器ID列表 | str数组 |
+| task_type | num | 任务类型 | |
+| statistic_type | num | 统计类型 | |
+| period_type | num | 周期类型 | 4: 活动期间 |
+| award_type | num | 奖励类型 | 3: 抽奖次数 |
+| task_status | num | 任务状态 | 0: 未完成<br />1: 已完成 |
+| accumulative_count | num | 累计完成次数 | |
+| indicators | array | 进度指标列表 | |
+| check_points | array | 检查点列表 | |
+| accumulative_check_points | null | 累计检查点 | |
+| can_edit | num | 是否可编辑 | |
+| prompt_text | str | 提示文案 | |
+| infinite_level_complete_num | num | 无限级完成数 | |
+| infinite_level_enabled | num | 无限级开启 | |
+| infinite_level_max_complete_num | num | 无限级最大完成数 | |
+| is_need_polling | num | 是否需要轮询 | 1: 需要 |
+| invited_infos | null | 邀请信息 | |
+
+`data.list[].indicators`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| name | str | 指标名称 | |
+| cur_value | num | 当前值 | |
+| limit | num | 目标值 | |
+
+`data.list[].check_points`数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| status | num | 状态 | 1: 已完成 |
+| alias | str | 别名 | |
+| award_type | num | 奖励类型 | 3: 抽奖次数 |
+| award_name | str | 奖励名称 | |
+| count | num | 奖励数量 | |
+| award_sid | str | 奖励关联场次ID | |
+| sid | str | 任务ID | |
+| list | array | 进度列表 | 元素字段同`indicators` |
+
+`data.task_refresh_conf`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| is_switch_on | num | 是否开启轮询 | 1: 开启 |
+| query_speed_ms | num | 轮询间隔 | 毫秒 |
+| query_times | num | 轮询次数 | |
+| NoPollingWhiteList | array | 免轮询白名单 | 任务ID(str)数组 |
+
+## 查询直播预约关注状态
+
+> https://api.bilibili.com/x/activity_components/reserve/followings
+
+*请求方式：GET*
+
+认证方式：Cookie
+
+批量查询直播预约（活动组件）的关注/预约状态
+
+**URL参数：**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ------ | ---- | ---- | ------ | ---- |
+| sids | str | 预约场次ID列表 | 必要 | 使用英文逗号分隔 |
+| csrf | str | CSRF令牌 | 必要 | 位于Cookie |
+| web_location | str | Web位置 | 非必要 | |
+
+**JSON回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | num | 错误信息 | 默认为 0 |
+| ttl | num | 1 | |
+| data | obj | 信息本体 | |
+
+`data`对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| List | obj | 预约状态 | 以预约场次ID为键 |
+
+`data.List`中键对应的值对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| isFollow | bool | 是否已预约 | |
+| total | num | 预约总人数 | |
+| mtime | num | 修改时间 | |
+| order | num | 排序 | |

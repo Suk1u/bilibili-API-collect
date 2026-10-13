@@ -490,3 +490,669 @@ curl -G 'https://api.live.bilibili.com/mobile/freeSilverAward' \
   --data-urlencode 'actionKey=appkey' \
   --data-urlencode 'sign=xxx'
 ```
+
+## 获取用户直播信息
+
+> https://api.live.bilibili.com/xlive/web-ucenter/user/live_info
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+主播个人中心首页展示的综合信息
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| room_id | num | 直播间长ID | |
+| main_site_level_rank | num | 主站等级排名 | |
+| master | obj | 主播等级信息 | |
+| vip_info | obj | 直播舱等红单信息 | |
+| live_time | num | 直播时长 | 分钟 |
+| bili_coins | num | B币 | |
+| san | num | SAN值 | 主播信用分 |
+| count | obj | 各类数量统计 | |
+| anchor_switch_info | obj | 主播开关信息 | |
+| need_guide | num | 是否需要引导 | |
+| emoticon_management | num | 表情管理 | |
+| up_emoticon_jurisdiction | num | UP主表情权限 | |
+| anchor_room_emoticon | num | 直播间表情 | |
+| anchor_violations_record | num | 主播违规记录入口 | 1: 显示 |
+
+`data.master`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| level | num | 主播等级 | |
+| current | num | 当前经验 | |
+| next | num | 下一级所需经验 | |
+| medal | null | 勋章 | |
+
+`data.vip_info`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| vip_endtime | str | 舰员到期时间 | `yyyy-MM-dd HH:mm:ss` |
+| svip_endtime | str | 提督到期时间 | `yyyy-MM-dd HH:mm:ss` |
+| month_price | num | 月费价格 | 单位为金瓜子/1000 |
+| year_price | num | 年费价格 | 单位为金瓜子/1000 |
+| vip_view_status | bool | 是否展示 | |
+
+`data.count`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| guard | num | 大航海人数 | |
+| fans_medal | num | 粉丝勋章人数 | |
+| title | num | 头衔数 | |
+| title_new | num | 新头衔数 | |
+| achieve | num | 成就数 | |
+
+## 获取全局弹幕屏蔽信息
+
+> https://api.live.bilibili.com/xlive/web-ucenter/v1/banned/GetShieldInfo
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+获取主播个人中心设置的全局弹幕屏蔽（区别于直播间维度的`banned_service/v1/shield/get_shield_info`）
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| shield_user_list | array | 屏蔽用户列表 | |
+| keyword_list | array | 屏蔽关键词列表 | str数组 |
+| shield_rules | obj | 屏蔽规则 | |
+
+`data.shield_rules`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| rank | num | 屏蔽等级低于 | 0为不屏蔽 |
+| verify | num | 屏蔽未认证用户 | 0为不屏蔽 |
+| level | num | 屏蔽等级低于 | 0为不屏蔽 |
+
+`data.shield_user_list`数组中的对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| uid | num | 用户mid | |
+| uname | str | 用户名 | |
+
+## 查询主播任务红点状态
+
+> https://api.live.bilibili.com/xlive/web-ucenter/v1/anchorTask/isViewed
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| task_should_notice | num | 任务红点 | 1: 显示 |
+| show_reward_entry | num | 奖励入口 | 1: 显示 |
+| reward_should_notice | num | 奖励红点 | 1: 显示 |
+| task_status | num | 任务状态 | 未知 |
+| is_blacked | num | 是否黑名单 | |
+| url | str | 奖励页面url | |
+
+## 获取权益中心面板
+
+> https://api.live.bilibili.com/xlive/web-ucenter/v1/privilegeCenter/panel
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**URL参数:**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ---- | ---- | ---- | ------ | ---- |
+| source | num | 来源 | 非必要 | `2` |
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| tab_list | array | 权益tab列表 | |
+| pc_tab_list | array | PC端权益tab列表 | 结构同`tab_list` |
+
+`data.tab_list`数组中的对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| tab_name | str | tab名称 | 如`大航海` |
+| tab_type | num | tab类型 | |
+| total_num | num | 数量 | |
+| alarm_num | num | 红点数 | |
+
+## 获取主播视频权益
+
+> https://api.live.bilibili.com/xlive/app-blink/v1/anchorVideo/GetUserRight
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| state | num | 状态 | 1: 开通 |
+| show_dot | num | 红点 | -1: 不显示 |
+| is_open | num | 是否开启 | 1: 开启 |
+| is_replay_edit_open | bool | 回放剪辑是否开启 | |
+
+## 获取主播开播授权信息
+
+> https://api.live.bilibili.com/xlive/app-blink/v1/anchorVideo/GetAnchorAuthorizationInfo
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| has_reserve_permission | num | 是否有预约权限 | |
+| has_live_cut_permission | num | 是否有直播剪辑权限 | |
+| has_replay_cut_permission | num | 是否有回放剪辑权限 | |
+| allow | num | 是否允许开播 | |
+| allow_type | num | 不允许开播原因类型 | 未知 |
+| is_allow_fans_level | num | 是否开启粉丝等级限制 | |
+| allow_fans_level | num | 粉丝等级限制值 | |
+| allow_white_list | num | 是否白名单 | |
+| is_same | bool | 未知 | |
+| is_show | num | 是否展示 | 1: 展示 |
+
+## 获取推广开关
+
+> https://api.live.bilibili.com/xlive/app-blink/v1/index/getSpreadSwitch
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| spread_switch | bool | 推广开关状态 | |
+| url | str | 推广页面url | |
+| pc_url | str | PC端推广页面url | |
+| alarm_num | num | 红点数 | |
+
+## 获取新版UI开关
+
+> https://api.live.bilibili.com/xlive/app-blink/v1/switch/GetNewUISwitch
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| switch | bool | 新版UI开关状态 | |
+
+## 获取抽奖入口配置
+
+> https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryEntranceConf
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+主播个人中心的抽奖(奖品仓库)入口配置
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| is_show | bool | 是否展示入口 | |
+| jump_to | str | 跳转url | |
+| btn_text | str | 按钮文案 | |
+
+## 获取主播抽奖记录
+
+> https://api.live.bilibili.com/xlive/lottery-interface/v1/Anchor/Record
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**URL参数:**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ---- | ---- | ---- | ------ | ---- |
+| page | num | 页码 | 必要 | 从1开始 |
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| list | array | 抽奖记录列表 | 无记录时为空 |
+| total_count | num | 总数 | |
+| page_count | num | 总页数 | |
+
+## 查询是否有主播抽奖
+
+> https://api.live.bilibili.com/xlive/lottery-interface/v1/anchor/HasAnchorLottery
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| has | bool | 是否有进行中的主播抽奖 | |
+| business_icon | str | 业务图标 | |
+| business_name | str | 业务名称 | |
+| activity_url | str | 活动url | |
+| pc_activity_url | str | PC端活动url | |
+| newly_opened | bool | 是否新开 | |
+| has_auth | bool | 是否有权限 | |
+
+## 查询税务信息灰度
+
+> https://api.live.bilibili.com/xlive/revenue/v3/anchorAccount/getTaxIncomeGrey
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| in_grey | num | 是否在灰度内 | 1: 在灰度内 |
+
+## 获取大航海权益配置
+
+> https://api.live.bilibili.com/xlive/general-interface/v1/guardBenefit/Config
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| have_custom_tab | bool | 是否有自定义tab | |
+| num | num | 数量 | |
+| duration | num | 时长 | |
+| show_check | bool | 是否展示检查 | |
+| check_condition | obj | 检查条件 | |
+
+`data.check_condition`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| anchor_legal | bool | 主播合规 | |
+| guard_num | bool | 大航海数量达标 | |
+
+## 获取主播大航海权益列表
+
+> https://api.live.bilibili.com/xlive/general-interface/v1/guardBenefit/ListByAnchor
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**URL参数:**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ---- | ---- | ---- | ------ | ---- |
+| page | num | 页码 | 必要 | 从1开始 |
+| type | num | 类型 | 必要 | `3` |
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| count | num | 总数 | |
+| page_count | num | 总页数 | |
+| list | array | 权益列表 | 无数据时为null |
+
+## 查询大航海权益入口红点
+
+> https://api.live.bilibili.com/xlive/general-interface/v1/guardBenefit/EntranceAdd
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| have | bool | 是否有红点 | |
+
+## 获取大航海配置开关
+
+> https://api.live.bilibili.com/xlive/guard-interface/general/abs
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+按场景查询大航海相关功能开关
+
+**URL参数:**
+
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| ---- | ---- | ---- | ------ | ---- |
+| scenes | str | 场景列表 | 必要 | 如`guard_renew_advance`(大航海提前续费) |
+| web_location | str | Web位置 | 非必要 | |
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| val | obj | 各场景开关值 | 键为场景名, 值为开关值 |
+
+## 获取荣誉头衔说明
+
+> https://api.live.bilibili.com/xlive/app-ucenter/v2/title/GetHonorDescription
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| username | str | 用户名 | |
+| next_glory_desc | str | 下一荣誉描述 | |
+| have_glory_title | obj | 当前荣誉头衔 | |
+| have_glory_desc | str | 当前荣誉描述 | |
+| unlock | array | 已解锁列表 | |
+| lock | array | 未解锁列表 | |
+| consume | num | 当前消耗 | |
+| next_glory_consume | num | 下一级消耗 | |
+| royal_url | str | 贵族中心url | |
+| gear_id | num | 档位ID | |
+| br_status | num | 未知 | |
+| br_jump_url | str | 跳转url | |
+
+`data.have_glory_title`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| tid | num | 头衔ID | |
+| name | str | 头衔名称 | |
+| web_dynamic_url_webp | str | 动效图片url(webp) | |
+| web_dynamic_url_apng | str | 动效图片url(apng) | |
+| web_static_pic | str | 静态图片url | |
+
+## 获取主播申请信息
+
+> https://api.live.bilibili.com/live_user/v1/AnchorApply/info
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功<br />4: 你没有权限 |
+| message | str | 错误信息 | `success` |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| show_apply_history | bool | 是否展示申请历史 | |
+| can_apply | bool | 是否可以提交申请 | |
+| reason_type | num | 不可申请原因类型 | 0: 无 |
+| reason_message | str | 不可申请原因文案 | |
+
+## 获取官方认证信息
+
+> https://api.live.bilibili.com/live_user/v1/Official/display
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+需要相应权限（如签约主播）, 无权限时返回`code=4`
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功<br />4: 你没有权限 |
+| message | str | 错误信息 | |
+| data | array | 信息本体 | 无权限时为空 |
+
+## 获取个人中心展示信息
+
+> https://api.live.bilibili.com/live_user/v1/UserCenter/getShowInfo
+
+*请求方式: GET*
+
+认证方式：Cookie
+
+**JSON回复:**
+
+根对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| code | num | 返回值 | 0: 成功 |
+| message | str | 错误信息 | |
+| data | obj | 信息本体 | |
+
+`data`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| show_guild_menu | bool | 是否展示公会菜单 | |
+| show_my_guild_menu | bool | 是否展示我的公会菜单 | |
+| is_guild_master | bool | 是否公会会长 | |
+| sign_anchor | obj | 签约主播信息 | |
+| official_anchor | obj | 官方认证主播信息 | |
+| mission_tab | obj | 任务tab信息 | |
+
+`data.sign_anchor`、`data.official_anchor`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| status | num | 状态 | 0: 无 |
+| start_date | str | 开始日期 | |
+| end_date | str | 结束日期 | |
+
+`data.mission_tab`对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| type | num | 类型 | |
+| show_tab | bool | 是否展示 | |
