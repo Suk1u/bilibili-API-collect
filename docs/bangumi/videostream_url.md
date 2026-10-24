@@ -438,7 +438,17 @@ V2版本的番剧视频流获取接口，返回结构与V1版本类似，但包�
 | 字段 | 类型 | 内容 | 备注 |
 | ---- | ---- | ---- | ---- |
 | play_view_business_info | obj | 播放视图业务信息 | |
-| video_info | obj | 视频流信息 | 结构与V1版本类似 |
+| video_info | obj | 视频流信息 | 结构与V1版本类似，另有下表V1未记录的字段 |
+
+`video_info`对象中V1版本未记录的字段：
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| can_watch_reason | num | 可观看原因代码 | 0：正常观看 |
+| durls | array | durl流列表 | DASH方式取流时为空数组 |
+| dyeid | str | 染色id | **作用尚不明确** |
+| error_code | num | 业务错误码 | 0：无错误 |
+| inline | obj | 内联播放信息 | 含`he_material`（是否有内联广告素材）、`seek`（是否允许seek） |
 
 `play_view_business_info`对象：
 

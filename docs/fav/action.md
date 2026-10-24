@@ -563,6 +563,61 @@ curl 'https://api.bilibili.com/x/v3/fav/folder/unfav' \
 --data-urlencode 'sign=xxx'
 ```
 
+### 收藏合集
+
+> https://api.bilibili.com/x/v3/fav/season/fav
+
+*请求方式：POST*
+
+认证方式：Cookie（SESSDATA）
+
+用于收藏合集（与取消收藏合集对应，网页端使用）
+
+**正文参数（application/x-www-form-urlencoded）：**
+
+| 参数名    | 类型 | 内容       | 必要性 | 备注                |
+| --------- | ---- | ---------- | ------ | ------------------- |
+| platform  | str  | 平台标识   | 必要   | 网页端为`web`       |
+| season_id | num  | 目标合集id | 必要   |                     |
+| csrf      | str  | CSRF Token | 必要   | 于 Cookie 中的`bili_jct` |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注                          |
+| ------- | ---- | -------- | ----------------------------- |
+| code    | num  | 返回值   | 0：成功                       |
+| message | str  | 错误信息 | 默认为0                       |
+| ttl     | num  | 1        |                               |
+| data    | str  | 操作结果 | 成功为`"SUCCESS"`             |
+
+**示例：**
+
+收藏id为`2722054`的合集：
+
+```shell
+curl 'https://api.bilibili.com/x/v3/fav/season/fav' \
+-b 'SESSDATA=xxx' \
+--data-urlencode 'platform=web' \
+--data-urlencode 'season_id=2722054' \
+--data-urlencode 'csrf=xxx'
+```
+
+<details>
+<summary>查看响应示例：</summary>
+
+```json
+{
+    "code": 0,
+    "message": "OK",
+    "ttl": 1,
+    "data": "SUCCESS"
+}
+```
+
+</details>
+
 ### 取消收藏合集
 
 > https://api.bilibili.com/x/v3/fav/season/unfav
@@ -608,6 +663,74 @@ curl 'https://api.bilibili.com/x/v3/fav/season/unfav' \
 --data-urlencode 'ts=0' \
 --data-urlencode 'sign=xxx'
 ```
+
+## 收藏夹点赞
+
+> https://api.bilibili.com/x/v3/fav/thump/up
+
+*请求方式：POST*
+
+认证方式：Cookie（SESSDATA）
+
+用于对收藏夹进行点赞/取消点赞
+
+**url参数：**
+
+| 参数名     | 类型 | 内容               | 必要性 | 备注                                              |
+| ---------- | ---- | ------------------ | ------ | ------------------------------------------------- |
+| rid        | num  | 目标收藏夹id       | 必要   |                                                   |
+| thumb_type | num  | 操作类型           | 必要   | 1：点赞<br />2：取消点赞                          |
+| type       | num  | 目标资源类型       | 必要   | 11：收藏夹                                        |
+| up_mid     | num  | 收藏夹所属用户mid  | 必要   |                                                   |
+| csrf       | str  | CSRF Token         | 必要   | 于 Cookie 中的`bili_jct`                          |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注            |
+| ------- | ---- | -------- | --------------- |
+| code    | num  | 返回值   | 0：成功         |
+| message | str  | 错误信息 | 默认为0         |
+| ttl     | num  | 1        |                 |
+| data    | obj  | 信息本体 |                 |
+
+`data`对象：
+
+| 字段      | 类型 | 内容           | 备注         |
+| --------- | ---- | -------------- | ------------ |
+| dislikes  | num  | 点踩数         |              |
+| likes     | num  | 点赞数         |              |
+| like_state | num | 当前点赞状态   | 0：未点赞<br />1：已点赞 |
+| prompt    | num  | **作用尚不明确** |              |
+
+**示例：**
+
+点赞用户`8126584`的收藏夹`69437184`：
+
+```shell
+curl -X POST 'https://api.bilibili.com/x/v3/fav/thump/up?rid=69437184&thumb_type=1&type=11&up_mid=8126584&csrf=xxx' \
+-b 'SESSDATA=xxx'
+```
+
+<details>
+<summary>查看响应示例：</summary>
+
+```json
+{
+    "code": 0,
+    "message": "OK",
+    "ttl": 1,
+    "data": {
+        "dislikes": 0,
+        "likes": 2,
+        "like_state": 1,
+        "prompt": 1
+    }
+}
+```
+
+</details>
 
 ## 收藏夹排序
 

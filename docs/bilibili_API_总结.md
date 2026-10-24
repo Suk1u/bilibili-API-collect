@@ -102,6 +102,7 @@
 | `/x/space/wbi/acc/info` | GET | 获取用户空间详细信息（WBI 签名） |
 | `/x/web-interface/card` | GET | 获取用户卡片信息 |
 | `/x/space/myinfo` | GET | 获取登录用户空间信息 |
+| `/x/space/v2/myinfo` | GET | 获取登录用户空间详细信息（新版） |
 | `/x/polymer/pc-electron/v1/user/cards` | GET | 批量获取用户详细信息（方法1） |
 | `/api.vc.bilibili.com/account/v1/user/cards` | GET | 批量获取用户详细信息（方法2） |
 | `/api.vc.bilibili.com/x/im/user_infos` | GET | 批量获取用户详细信息（方法3） |
@@ -205,6 +206,7 @@
 |---------|------|------|
 | `/x/v2/reply` | GET | 获取主评论区内容 |
 | `/x/v2/reply` | GET | 获取子评论区内容（设置 root 参数） |
+| `/x/v2/reply/at` | GET | 查询评论@用户联想列表 |
 
 ---
 
@@ -298,6 +300,10 @@
 | `/x/v3/fav/folder/delete` | POST | 删除收藏夹 |
 | `/x/v3/fav/folder/modify` | POST | 修改收藏夹 |
 | `/x/v3/fav/resource/deal` | POST | 收藏/取消收藏 |
+| `/x/v3/fav/season/fav` | POST | 收藏合集 |
+| `/x/v3/fav/season/unfav` | POST | 取消收藏合集 |
+| `/x/v3/fav/thump/up` | POST | 收藏夹点赞/取消点赞 |
+| `/x/v3/fav/folder/season/show` | GET | 查询收藏夹合集展示开关 |
 
 ---
 
@@ -329,6 +335,7 @@
 | `/pgc/web/season/section` | GET | 获取番剧集数信息 |
 | `/pgc/web/timeline` | GET | 获取番剧时间线 |
 | `/pgc/view/v2/follow/add` | POST | 追加番剧 |
+| `/pgc/view/web/ep/page` | GET | 获取剧集分集分页列表（WBI 签名） |
 
 ---
 
@@ -368,6 +375,7 @@
 | `/x/v2/dm/history/index` | GET | 获取历史弹幕 |
 | `/x/v2/dm/thumbup/add` | POST | 点赞弹幕 |
 | `/x/v2/dm/web/view` | GET | 获取视频弹幕视图 |
+| `/x/v2/dm/exposure` | POST | 上报弹幕曝光统计数据 |
 
 ---
 

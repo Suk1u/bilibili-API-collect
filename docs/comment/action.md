@@ -571,3 +571,92 @@ curl -X POST 'https://api.bilibili.com/x/v2/reply/appeal/submit' \
   -F 'csrf=xxx' \
   -b 'SESSDATA=xxx'
 ```
+
+## 查询评论@用户联想列表
+
+> https://api.bilibili.com/x/v2/reply/at
+
+*请求方式：GET*
+
+认证方式：Cookie（SESSDATA）
+
+用于发布评论/回复时输入`@`后联想展示可@的用户列表（网页端评论框）
+
+**url参数：**
+
+| 参数名  | 类型 | 内容             | 必要性 | 备注                                     |
+| ------- | ---- | ---------------- | ------ | ---------------------------------------- |
+| keyword | str  | 联想关键词       | 非必要 | 已输入的`@`后续内容，用于过滤；可为空 |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注            |
+| ------- | ---- | -------- | --------------- |
+| code    | num  | 返回值   | 0：成功         |
+| message | str  | 错误信息 | 默认为0         |
+| ttl     | num  | 1        |                 |
+| data    | obj  | 信息本体 |                 |
+
+`data`对象：
+
+| 字段   | 类型  | 内容     | 备注 |
+| ------ | ----- | -------- | ---- |
+| groups | array | 分组列表 |      |
+
+`groups`数组中的对象：
+
+| 字段       | 类型  | 内容     | 备注                     |
+| ---------- | ----- | -------- | ------------------------ |
+| group_type | num   | 分组类型 | 2：我的关注              |
+| group_name | str   | 分组名称 |                          |
+| items      | array | 用户列表 | **（其他分组类型待补充）** |
+
+`items`数组中的对象：
+
+| 字段                | 类型 | 内容         | 备注                              |
+| ------------------- | ---- | ------------ | --------------------------------- |
+| mid                 | num  | 用户mid      |                                   |
+| name                | str  | 用户昵称     |                                   |
+| face                | str  | 用户头像url  |                                   |
+| fan                 | num  | 粉丝数       |                                   |
+| official_verify_type | num | 认证类型     | -1：无认证<br />0：个人认证<br />1：机构认证 |
+
+**示例：**
+
+```shell
+curl -G 'https://api.bilibili.com/x/v2/reply/at' \
+--data-urlencode 'keyword=' \
+-b 'SESSDATA=xxx'
+```
+
+<details>
+<summary>查看响应示例：</summary>
+
+```json
+{
+    "code": 0,
+    "message": "OK",
+    "ttl": 1,
+    "data": {
+        "groups": [
+            {
+                "group_type": 2,
+                "group_name": "我的关注",
+                "items": [
+                    {
+                        "mid": 473897020,
+                        "name": "心眠z",
+                        "face": "https://i1.hdslb.com/bfs/face/01e9c190c9bb31a5fa04b11863f185acb385de7f.jpg",
+                        "fan": 33,
+                        "official_verify_type": -1
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+</details>

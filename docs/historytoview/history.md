@@ -88,7 +88,7 @@
 | author_face | str                             | UP 主头像 url            |                                          |
 | author_mid  | num                             | UP 主 mid                |                                          |
 | view_at     | num                             | 查看时间                 | 时间戳                                   |
-| progress    | num                             | 视频观看进度             | 单位为秒<br />用于稿件视频或剧集         |
+| progress    | num                             | 视频观看进度             | 单位为秒<br />用于稿件视频或剧集<br />-1：已看完 |
 | badge       | str                             | 角标文案                 | 稿件视频 / 剧集 / 笔记                   |
 | show_title  | str                             | 分 P 标题                | 用于稿件视频或剧集                       |
 | duration    | num                             | 视频总时长               | 用于稿件视频或剧集                       |

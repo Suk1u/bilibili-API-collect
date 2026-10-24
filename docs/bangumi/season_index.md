@@ -1264,3 +1264,193 @@ curl -G 'https://api.bilibili.com/pgc/season/index/condition' \
 curl -G 'https://api.bilibili.com/pgc/season/rank/list' \
   --data-urlencode 'season_type=1'
 ```
+
+## 获取剧集分集分页列表
+
+> https://api.bilibili.com/pgc/view/web/ep/page
+
+*请求方式：GET*
+
+鉴权方式：[Wbi 签名](../misc/sign/wbi.md)
+
+用于获取长番剧的分集分页列表（分集数较多时网页端按 50 集/页分页展示，替代一次性返回全部分集的方式）
+
+**url参数：**
+
+| 参数名    | 类型 | 内容         | 必要性 | 备注                                 |
+| --------- | ---- | ------------ | ------ | ------------------------------------ |
+| season_id | num  | 剧集season_id | 必要   |                                      |
+| w_rid     | str  | Wbi 签名     | 必要   | 详见 [Wbi 签名](../misc/sign/wbi.md) |
+| wts       | num  | 当前时间戳   | 必要   | 详见 [Wbi 签名](../misc/sign/wbi.md) |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注              |
+| ------- | ---- | -------- | ----------------- |
+| code    | num  | 返回值   | 0：成功           |
+| message | str  | 错误信息 | 默认为success     |
+| result  | obj  | 信息本体 |                   |
+
+`result`对象：
+
+| 字段          | 类型  | 内容               | 备注                                       |
+| ------------- | ----- | ------------------ | ------------------------------------------ |
+| locator       | obj   | 定位信息           | 当前定位的分集位置                         |
+| sections      | array | 分集分组列表       | 仅包含已加载过分集的分组                   |
+| sections_meta | array | 全量分组元数据列表 |                                           |
+
+`result`中的`locator`对象：
+
+| 字段          | 类型 | 内容                 | 备注 |
+| ------------- | ---- | -------------------- | ---- |
+| index_in_page | num  | 当前分集在页内序号   |      |
+| page_index    | num  | 当前分集所在页序号   |      |
+| season_id     | num  | 剧集season_id        |      |
+| section_id    | num  | 当前分集所在分组id   |      |
+| target_ep_id  | num  | 当前定位分集ep_id    |      |
+
+`sections`数组中的对象：
+
+| 字段      | 类型  | 内容           | 备注                   |
+| --------- | ----- | -------------- | ---------------------- |
+| section_id | num   | 分组id         |                        |
+| page_mode | num   | 分页模式       | **作用尚不明确**，样本为1 |
+| pages      | array | 分页列表       |                        |
+| pages_meta | array | 全量分页元数据 |                        |
+
+`sections`中的`pages`数组中的对象：
+
+| 字段      | 类型  | 内容           | 备注 |
+| --------- | ----- | -------------- | ---- |
+| page_index | num   | 页序号         |      |
+| episodes   | array | 该页分集列表   | 元素结构同[获取剧集详细信息](info.md)中`episodes`数组中的对象 |
+
+`sections`中的`pages_meta`数组中的对象：
+
+| 字段       | 类型 | 内容     | 备注                             |
+| ---------- | ---- | -------- | -------------------------------- |
+| page_index | num  | 页序号   |                                  |
+| title      | str  | 页标题   | 为分集序号区间，如`1-50`         |
+
+`sections_meta`数组中的对象：
+
+| 字段         | 类型  | 内容       | 备注                                                     |
+| ------------ | ----- | ---------- | -------------------------------------------------------- |
+| id           | num   | 分组id     |                                                          |
+| title        | str   | 分组标题   |                                                          |
+| type         | num   | 分组类型   | 0：正片<br />1：预告<br />2：花絮<br />5：其他            |
+| type2        | num   | 分组类型2  | **作用尚不明确**                                         |
+| attr         | num   | 分组属性   | 1：需要大会员（样本中预告分组为1）                       |
+| episode_id   | num   | 0         | **作用尚不明确**                                         |
+| episode_ids  | array | 空        | **作用尚不明确**                                         |
+
+**示例：**
+
+获取剧集`season_id=28747`的分集分页列表：
+
+```shell
+curl -G 'https://api.bilibili.com/pgc/view/web/ep/page' \
+--data-urlencode 'season_id=28747' \
+--data-urlencode 'w_rid=xxx' \
+--data-urlencode 'wts=0'
+```
+
+<details>
+<summary>查看响应示例：</summary>
+
+```json
+{
+    "code": 0,
+    "message": "success",
+    "result": {
+        "locator": {
+            "index_in_page": 46,
+            "page_index": 3,
+            "season_id": 28747,
+            "section_id": 38618,
+            "target_ep_id": 4292441
+        },
+        "sections": [
+            {
+                "page_mode": 1,
+                "pages": [
+                    {
+                        "episodes": [],
+                        "page_index": 2
+                    },
+                    {
+                        "episodes": [],
+                        "page_index": 3
+                    }
+                ],
+                "pages_meta": [
+                    {
+                        "page_index": 0,
+                        "title": "1-50"
+                    },
+                    {
+                        "page_index": 3,
+                        "title": "151-197"
+                    }
+                ],
+                "section_id": 38618
+            },
+            {
+                "page_mode": 1,
+                "pages": [
+                    {
+                        "episodes": [],
+                        "page_index": 0
+                    }
+                ],
+                "pages_meta": [
+                    {
+                        "page_index": 0,
+                        "title": "1-50"
+                    },
+                    {
+                        "page_index": 2,
+                        "title": "101-119"
+                    }
+                ],
+                "section_id": 214158
+            }
+        ],
+        "sections_meta": [
+            {
+                "attr": 0,
+                "episode_id": 0,
+                "episode_ids": [],
+                "id": 38618,
+                "title": "",
+                "type": 0,
+                "type2": 0
+            },
+            {
+                "attr": 0,
+                "episode_id": 0,
+                "episode_ids": [],
+                "id": 214158,
+                "title": "特别花絮",
+                "type": 2,
+                "type2": 0
+            },
+            {
+                "attr": 1,
+                "episode_id": 0,
+                "episode_ids": [],
+                "id": 38936,
+                "title": "预告",
+                "type": 1,
+                "type2": 0
+            }
+        ]
+    }
+}
+```
+
+注：响应示例中`episodes`数组元素结构同[获取剧集详细信息](info.md)，此处省略
+
+</details>

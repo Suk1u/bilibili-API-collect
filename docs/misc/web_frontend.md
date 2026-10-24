@@ -63,3 +63,19 @@
 | ---- | ---- | ---- | ---- |
 | code | num | 返回值 | -304: 未修改 |
 | message | str | 错误信息 | 如 "Not Modified" |
+
+## 上报前端监控数据
+
+> https://api.bilibili.com/x/web-frontend/data/collector
+
+*请求方式：POST*
+
+用于网页端前端监控埋点批量上报（如播放器卡顿监控`web-player-monitor`），正文为 json 数组，每个元素含`eventId`、`ctime`、`appInfo`、`runtimeInfo`、`extendedFields`（业务扩展字段）等
+
+**json回复：**
+
+根对象：
+
+| 字段 | 类型 | 内容   | 备注    |
+| ---- | ---- | ------ | ------- |
+| code | num  | 返回值 | 0：成功 |

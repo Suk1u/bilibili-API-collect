@@ -1010,6 +1010,211 @@ curl -G 'https://api.bilibili.com/x/space/myinfo' \
 
 </details>
 
+## 登录用户空间详细信息（新版）
+
+> https://api.bilibili.com/x/space/v2/myinfo
+
+*请求方式：GET*
+
+认证方式：Cookie（SESSDATA）
+
+旧版接口：[登录用户空间详细信息](#登录用户空间详细信息)（`/x/space/myinfo`）
+
+新版将用户资料封装于`profile`对象中，并补充了职业认证、荣誉、数字身份等字段（网页端个人空间使用）
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注                      |
+| ------- | ---- | -------- | ------------------------- |
+| code    | num  | 返回值   | 0：成功<br />-101：未登录 |
+| message | str  | 错误信息 | 默认为0                   |
+| ttl     | num  | 1        |                           |
+| data    | obj  | 信息本体 |                           |
+
+`data`对象：
+
+| 字段       | 类型 | 内容         | 备注 |
+| ---------- | ---- | ------------ | ---- |
+| profile    | obj  | 用户资料     |      |
+| level_exp  | obj  | 等级经验信息 |      |
+| coins      | num  | 硬币数       |      |
+| following  | num  | 关注数       |      |
+| follower   | num  | 粉丝数       |      |
+
+`data`中的`level_exp`对象：
+
+| 字段          | 类型 | 内容           | 备注                     |
+| ------------- | ---- | -------------- | ------------------------ |
+| current_level | num  | 当前等级       | 0-6级                    |
+| current_min   | num  | 当前等级起始经验值 |                     |
+| current_exp   | num  | 当前账户的经验值 |                      |
+| next_exp      | num  | 下一等级所需经验值<br />**（不是还需要多少）** | 最高级为-1 |
+| level_up      | num  | 升级剩余经验值 | **作用尚不明确**<br />最高级为负值 |
+
+`profile`对象：
+
+| 字段            | 类型 | 内容             | 备注                                             |
+| --------------- | ---- | ---------------- | ------------------------------------------------ |
+| mid             | num  | mid              |                                                  |
+| name            | str  | 昵称             |                                                  |
+| sex             | str  | 性别             | 男 女 保密                                       |
+| face            | str  | 头像图片url      |                                                  |
+| sign            | str  | 签名             |                                                  |
+| rank            | num  | 10000            | **作用尚不明确**                                 |
+| level           | num  | 当前等级         | 0-6级                                            |
+| jointime        | num  | 0                | **作用尚不明确**                                 |
+| moral           | num  | 节操值           | 默认70                                           |
+| silence         | num  | 封禁状态         | 0：正常<br />1：被封                             |
+| email_status    | num  | 已验证邮箱       | 0：未验证<br />1：已验证                         |
+| tel_status      | num  | 已验证手机号     | 0：未验证<br />1：已验证                         |
+| identification  | num  | 1                | **作用尚不明确**                                 |
+| vip             | obj  | 大会员状态       | 见旧版章节`vip`对象<br />新版另含`role`、`avatar_icon`、`ott_info`、`super_vip`、`tv_vip_status`等字段 |
+| pendant         | obj  | 头像挂件         | 见旧版章节`pendant`对象                          |
+| nameplate       | obj  | 勋章信息         | 见旧版章节`nameplate`对象                        |
+| official        | obj  | 认证信息         | 见旧版章节`Official`对象                         |
+| birthday        | num  | 生日             | 时间戳                                           |
+| is_tourist      | num  | 0                | **作用尚不明确**                                 |
+| is_fake_account | num  | 0                | **作用尚不明确**                                 |
+| pin_prompting   | num  | 0                | **作用尚不明确**                                 |
+| is_deleted      | num  | 0                | **作用尚不明确**                                 |
+| in_reg_audit    | num  | 0                | **作用尚不明确**                                 |
+| is_rip_user     | bool | false            | **作用尚不明确**                                 |
+| profession      | obj  | 职业认证信息     |                                                  |
+| face_nft        | num  | 是否为NFT头像    | 0：不是<br />1：是                               |
+| face_nft_new    | num  | 是否为NFT头像(新)| 0：不是<br />1：是                               |
+| is_senior_member | num | 是否为硬核会员   | 0：不是<br />1：是                               |
+| honours         | obj  | 荣誉信息         | 含`colour`（颜色）、`tags`、`is_latest_100honour` |
+| digital_id      | str  | 数字身份id       | 无为空                                           |
+| digital_type    | num  | 数字身份类型     | **作用尚不明确**                                 |
+| attestation     | obj  | 认证展示信息     | **作用尚不明确**                                 |
+| expert_info     | obj  | 专家信息         | **作用尚不明确**                                 |
+| name_render     | obj  | 昵称渲染信息     | 无为null                                         |
+| country_code    | str  | 国际区号         |                                                  |
+| handle          | str  | 用户handle       | 无为空                                           |
+
+**示例：**
+
+```shell
+curl 'https://api.bilibili.com/x/space/v2/myinfo' \
+-b 'SESSDATA=xxx'
+```
+
+<details>
+<summary>查看响应示例：</summary>
+
+```json
+{
+    "code": 0,
+    "message": "OK",
+    "ttl": 1,
+    "data": {
+        "profile": {
+            "mid": 8126584,
+            "name": "xxx",
+            "sex": "保密",
+            "face": "http://i1.hdslb.com/bfs/face/xxx.jpg",
+            "sign": "",
+            "rank": 10000,
+            "level": 6,
+            "jointime": 0,
+            "moral": 70,
+            "silence": 0,
+            "email_status": 1,
+            "tel_status": 1,
+            "identification": 1,
+            "vip": {
+                "type": 2,
+                "status": 1,
+                "due_date": 1798992000000,
+                "vip_pay_type": 0,
+                "theme_type": 0,
+                "label": {
+                    "text": "年度大会员",
+                    "label_theme": "annual_vip",
+                    "label_type": 1
+                },
+                "avatar_subscript": 1,
+                "nickname_color": "#FB7299",
+                "role": 3,
+                "tv_vip_status": 0,
+                "tv_due_date": 1623168000,
+                "ott_info": {
+                    "vip_type": 1,
+                    "pay_type": 0,
+                    "status": 0,
+                    "overdue_time": 1623168000
+                },
+                "super_vip": {
+                    "is_super_vip": false
+                }
+            },
+            "pendant": {
+                "pid": 295,
+                "name": "刺客伍六七",
+                "image": "https://i1.hdslb.com/bfs/face/xxx.png",
+                "expire": 0,
+                "n_pid": 295
+            },
+            "nameplate": {
+                "nid": 92,
+                "name": "有爱大佬",
+                "level": "普通勋章",
+                "condition": "当前持有粉丝勋章最高等级>=15级"
+            },
+            "official": {
+                "role": 0,
+                "title": "",
+                "desc": "",
+                "type": -1
+            },
+            "birthday": 315504000,
+            "is_tourist": 0,
+            "is_fake_account": 0,
+            "pin_prompting": 0,
+            "is_deleted": 0,
+            "in_reg_audit": 0,
+            "is_rip_user": false,
+            "profession": {
+                "id": 0,
+                "name": "",
+                "show_name": "",
+                "is_show": 0
+            },
+            "face_nft": 0,
+            "face_nft_new": 0,
+            "is_senior_member": 0,
+            "honours": {
+                "mid": 8126584,
+                "colour": {
+                    "dark": "#CE8620",
+                    "normal": "#F0900B"
+                },
+                "tags": null,
+                "is_latest_100honour": 0
+            },
+            "digital_id": "",
+            "digital_type": -2,
+            "country_code": "86",
+            "handle": ""
+        },
+        "level_exp": {
+            "current_level": 6,
+            "current_min": 28800,
+            "current_exp": 60941,
+            "next_exp": -1,
+            "level_up": -62135596800
+        },
+        "coins": 999,
+        "following": 183,
+        "follower": 27
+    }
+}
+```
+
+</details>
+
 ## 多用户详细信息
 
 > https://api.bilibili.com/x/polymer/pc-electron/v1/user/cards

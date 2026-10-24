@@ -827,53 +827,74 @@ curl 'https://api.bilibili.com/x/v2/dm/edit/state' \
 
 </details>
 
-## 上报弹幕曝光
+## 上报弹幕曝光数据
 
 > https://api.bilibili.com/x/v2/dm/exposure
 
 *请求方式：POST*
 
-认证方式：Cookie
+认证方式：Cookie（SESSDATA）
 
-Web端播放器上报弹幕拉取/展示统计数据, 用于弹幕相关风控与统计
+用于播放结束后向服务器上报本次播放会话的弹幕曝光统计数据（曝光/互动弹幕条数、拉取次数等，网页端播放器卸载时调用），用于弹幕相关风控与统计
 
 **正文参数（application/x-www-form-urlencoded）：**
 
-| 参数名 | 类型 | 内容 | 必要性 | 备注 |
-| ------ | ---- | ---- | ------ | ---- |
-| type | num | 类型 | 必要 | `1` |
-| oid | num | 弹幕所在视频分P的cid | 必要 | |
-| pid | num | 视频av号 | 必要 | |
-| platform | str | 平台 | 必要 | `web` |
-| sessionId | str | 会话ID | 必要 | |
-| mobi_app | str | `web` | 必要 | |
-| appkey | str | `web` | 必要 | |
-| count | num | 展示弹幕数量 | 必要 | |
-| interactive_dm_count | num | 互动弹幕数量 | 必要 | |
-| dm_from_stats | str | 弹幕来源统计 | 必要 | JSON字符串, 如`{"1":40}` |
-| pull_count | num | 拉取弹幕数量 | 必要 | |
-| statistics | str | 统计信息 | 非必要 | JSON字符串, 含`appId`、`platform`、`abtest`、`version` |
-| extra | str | 附加信息 | 非必要 | JSON字符串, 含`fid`、`version`、`revision` |
-| csrf | str | CSRF Token（位于cookie） | 必要 | |
+| 参数名               | 类型 | 内容                   | 必要性 | 备注                                                |
+| -------------------- | ---- | ---------------------- | ------ | --------------------------------------------------- |
+| statistics           | str  | 统计基础信息json       | 必要   | 含`appId`（100）、`platform`（5）、`abtest`、`version` |
+| oid                  | num  | 弹幕所在视频分P的cid   | 必要   |                                                     |
+| pid                  | num  | 视频av号              | 必要   |                                                     |
+| platform             | str  | 平台标识               | 必要   | web端为`web`                                        |
+| sessionId            | str  | 播放会话id             | 必要   |                                                     |
+| mobi_app             | str  | 平台类型               | 必要   | web端为`web`                                        |
+| appkey               | str  | AppKey                 | 必要   | web端为`web`                                        |
+| count                | num  | 曝光弹幕条数           | 必要   |                                                     |
+| interactive_dm_count | num  | 互动弹幕曝光条数       | 必要   |                                                     |
+| dm_from_stats        | str  | 各来源弹幕条数json     | 必要   | 如`{"1":12}`                                        |
+| pull_count           | num  | 弹幕段拉取次数         | 必要   |                                                     |
+| type                 | num  | 视频类型               | 必要   | 1：UGC视频                                          |
+| extra                | str  | 扩展信息json           | 必要   | 含`fid`、弹幕引擎`version`、`revision`              |
+| csrf                 | str  | CSRF Token             | 必要   | 于 Cookie 中的`bili_jct`                            |
 
 **json回复：**
 
 根对象：
 
-| 字段    | 类型 | 内容     | 备注                 |
-| ------- | ---- | -------- | -------------------- |
-| code    | num  | 返回值   | 0：成功              |
-| message | str  | 错误信息 | 默认为OK             |
-| ttl     | num  | 1        |                      |
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 | 默认为0 |
+| ttl     | num  | 1        |         |
+
+**示例：**
+
+```shell
+curl 'https://api.bilibili.com/x/v2/dm/exposure' \
+-b 'SESSDATA=xxx' \
+--data-urlencode 'statistics={"appId":100,"platform":5,"abtest":"","version":""}' \
+--data-urlencode 'oid=37773968392' \
+--data-urlencode 'pid=116458155674794' \
+--data-urlencode 'platform=web' \
+--data-urlencode 'sessionId=d210ffdcd784022f8b6af53839c3635d' \
+--data-urlencode 'mobi_app=web' \
+--data-urlencode 'appkey=web' \
+--data-urlencode 'count=12' \
+--data-urlencode 'interactive_dm_count=0' \
+--data-urlencode 'dm_from_stats={"1":12}' \
+--data-urlencode 'pull_count=348' \
+--data-urlencode 'type=1' \
+--data-urlencode 'extra={"fid":"Default:Ugc:0","version":"4.9.79-rc.4098.0","revision":"6f23a6dd"}' \
+--data-urlencode 'csrf=xxx'
+```
 
 <details>
 <summary>查看响应示例：</summary>
 
 ```json
 {
-    "code":0,
-    "message":"OK",
-    "ttl":1
+    "code": 0,
+    "message": "OK",
+    "ttl": 1
 }
 ```
 

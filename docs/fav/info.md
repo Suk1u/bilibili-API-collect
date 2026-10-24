@@ -856,3 +856,53 @@ curl -G 'https://api.bilibili.com/medialist/gateway/base/created' \
 --data-urlencode 'ts=0' \
 --data-urlencode 'sign=xxx'
 ```
+
+## 查询收藏夹合集展示开关
+
+> https://api.bilibili.com/x/v3/fav/folder/season/show
+
+*请求方式：GET*
+
+认证方式：Cookie（SESSDATA）
+
+用于查询当前用户空间收藏夹页是否展示合集分区（网页端个人空间收藏夹页调用）
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 | 默认为0 |
+| ttl     | num  | 1        |         |
+| data    | obj  | 信息本体 |         |
+
+`data`对象：
+
+| 字段 | 类型 | 内容             | 备注                     |
+| ---- | ---- | ---------------- | ------------------------ |
+| show | bool | 是否展示合集分区 | true：展示<br />false：不展示 |
+
+**示例：**
+
+```shell
+curl 'https://api.bilibili.com/x/v3/fav/folder/season/show' \
+-b 'SESSDATA=xxx'
+```
+
+<details>
+<summary>查看响应示例：</summary>
+
+```json
+{
+    "code": 0,
+    "message": "OK",
+    "ttl": 1,
+    "data": {
+        "show": false
+    }
+}
+```
+
+</details>

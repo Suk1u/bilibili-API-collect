@@ -82,6 +82,11 @@ web 播放器的信息接口，提供正常播放需要的元数据，包括：�
 | is_upower_exclusive_with_qa | bool | 是否为带专属问答的充电专属视频 |  |
 | arc_aigc | null | AIGC相关信息 | 当前返回null |
 | self_visible | null | 自身可见性 | 当前返回null |
+| player_icon | obj | 播放器图标信息 |  |
+| asr_language | str | 语音识别语言 |  |
+| ocr_language | str | OCR 识别语言 |  |
+| script_pace | num | 台词本默认语速 |  |
+| script_pace_exp | str | 台词本语速实验组标识 |  |
 
 `data` 对象中的 `options` 对象:
 
@@ -162,6 +167,7 @@ web 播放器的信息接口，提供正常播放需要的元数据，包括：�
 | 字段      | 类型  | 内容     | 备注 |
 | --------- | ----- | -------- | ---- |
 | graph_version | num | 剧情图id |   |
+| history_node | obj | 上次观看的节点信息 | 无观看历史时为空对象 |
 | msg | str |  | 未登入有机会返回 `登录后才能体验全部结局哦～` |
 | error_toast | str | 错误信息？ | 所有互动视频皆返回 `剧情图被修改已失效`，不确定有没有例外 |
 | mark | num | 0? |   |
