@@ -88,6 +88,7 @@ curl 'https://passport.bilibili.com/x/passport-login/web/qrcode/generate'
 | 参数名        | 类型  | 内容     | 必要性 | 备注  |
 |------------|-----|--------|-----|-----|
 | qrcode_key | str | 扫码登录秘钥 | 必要 |     |
+| b_ret      | str | 风控校验数据 | 待验证 | 值为一段 Base64 字符串，疑似取自页面二维码图片的 Base64 数据片段，同一会话内取值恒定；<br />2026-10 起实测 Web 端随 poll 与 [sso/set](#跨域种cookie) 请求携带 |
 
 
 密钥超时为180秒
@@ -237,6 +238,96 @@ x-cache-webcdn: BYPASS from blzone02
       "code": 86038,
       "message": "二维码已失效"
     }
+}
+```
+
+</details>
+
+### 跨域同步登录态（SSO）
+
+扫码登录成功后（`data.code` 为 `0`），除主站 `bilibili.com` 的 cookie 由 poll 响应直接写入外，Web 端还会通过下列接口将登录态同步到 B 站其它主域
+
+#### 获取跨域登录票据列表
+
+> https://passport.bilibili.com/x/passport-login/web/sso/list
+
+*请求方式：GET*
+
+需要登录（携带主站 cookie）
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 |         |
+| ttl     | num  | 1        |         |
+| data    | obj  | 信息本体 |         |
+
+`data` 对象：
+
+| 字段 | 类型 | 内容                 | 备注                             |
+| ---- | ---- | -------------------- | -------------------------------- |
+| sso  | arr  | 跨域种 cookie url 列表 | 每个域名一个，`ticket` 各不相同且一次性 |
+
+<details>
+<summary>查看响应示例：</summary>
+
+```json
+{
+    "code": 0,
+    "message": "OK",
+    "ttl": 1,
+    "data": {
+        "sso": [
+            "https://passport.biligame.com/x/passport-login/web/sso/set?ticket=***",
+            "https://passport.bilibili.cn/x/passport-login/web/sso/set?ticket=***",
+            "https://passport.huasheng.cn/x/passport-login/web/sso/set?ticket=***"
+        ]
+    }
+}
+```
+
+</details>
+
+#### 跨域种cookie
+
+> https://passport.biligame.com/x/passport-login/web/sso/set<br />
+> https://passport.bilibili.cn/x/passport-login/web/sso/set<br />
+> https://passport.huasheng.cn/x/passport-login/web/sso/set
+
+*请求方式：GET*
+
+逐个请求上一步返回的 url，各域名服务端校验 `ticket` 后通过响应头部 `set-cookie` 写入登录态 cookie
+
+**url参数：**
+
+| 参数名 | 类型 | 内容               | 必要性 | 备注                  |
+| ------ | ---- | ------------------ | ------ | --------------------- |
+| ticket | str | 一次性跨域登录票据 | 必要   | 由 sso/list 下发      |
+
+**json回复：**
+
+根对象：
+
+| 字段    | 类型 | 内容     | 备注    |
+| ------- | ---- | -------- | ------- |
+| code    | num  | 返回值   | 0：成功 |
+| message | str  | 错误信息 |         |
+| ttl     | num  | 1        |         |
+| data    | obj  | 信息本体 | 空对象   |
+
+<details>
+<summary>查看响应示例：</summary>
+
+```json
+{
+    "code": 0,
+    "message": "OK",
+    "ttl": 1,
+    "data": {}
 }
 ```
 

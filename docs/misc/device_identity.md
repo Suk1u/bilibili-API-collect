@@ -136,29 +136,51 @@ let veri_code = format!("{:0>2x}", veri_code % 256);
 
 </details>
 
-## GAIA 网关风控上报
+## 上报GAIA设备指纹（加密）
 
 > https://api.bilibili.com/x/internal/gaia-gateway/ExClimbCongLing
 
 *请求方式：POST*
 
-内部风控网关接口，与`ExClimbWuzhi`同族，Web端首页加载时上报加密的风控数据
+GAIA 网关设备指纹上报接口，作用与 `ExClimbWuzhi` 相同，区别在于请求体采用信封加密：使用[获取GAIA公钥](#获取gaia公钥)接口下发的 RSA 公钥加密随机生成的 AES 密钥，再用该 AES 密钥加密指纹数据
+
+实测 Web 端登录等场景会请求该接口
 
 **正文参数（ application/json ）：**
 
-| 参数名 | 类型 | 内容 | 必要性 | 备注 |
-| ------ | ---- | ---- | ------ | ---- |
-| header | obj | 加密头 | 必要 | 含`encode_type`、`payload_type`、加密后的密钥等字段 |
+| 参数名 | 类型 | 内容             | 必要性 | 备注 |
+| ------ | ---- | ---------------- | ------ | ---- |
+| header | obj | 加密信封         | 必要   |      |
+| encrypt_payload | str | 加密后的指纹数据 | 必要   |      |
+
+`header` 对象：
+
+| 字段             | 类型 | 内容                     | 备注                                        |
+| ---------------- | ---- | ------------------------ | ------------------------------------------- |
+| encode_type      | num  | 加密类型                 | 实测为 `2`                                  |
+| payload_type     | num  | 载荷类型                 | 实测为 `4`                                  |
+| encoded_aes_key  | str  | RSA 加密后的 AES 密钥    | 使用 ExGetAxe 下发的公钥加密                |
+| encoded_version  | str  | 公钥版本号               | 与 ExGetAxe 返回的 `version` 对应，如 `v1`  |
+| ts               | num  | 请求时间戳               | 毫秒                                        |
 
 **json回复：**
 
 根对象：
 
-| 字段    | 类型 | 内容     | 备注      |
-| ------- | ---- | -------- | --------- |
-| code    | num  | 返回值   | 0：成功   |
-| message | str  | 错误信息 | 默认为 0  |
-| data    | obj  | 信息本体 | 空对象    |
+| 字段    | 类型 | 内容     | 备注        |
+| ------- | ---- | -------- | ----------- |
+| code    | num  | 返回值   | 0：成功     |
+| message | str  | 错误信息 | 默认为 0    |
+| ttl     | num  | 1        |             |
+| data    | obj  | 信息本体 | 通常为空对象 |
+
+**示例：**
+
+```shell
+curl 'https://api.bilibili.com/x/internal/gaia-gateway/ExClimbCongLing' \
+-H 'content-type: application/json' \
+--data '{"header":{"encode_type":2,"payload_type":4,"encoded_aes_key":"...[已省略]...","ts":1791357783735,"encoded_version":"v1"},"encrypt_payload":"...[已省略]..."}'
+```
 
 <details>
 <summary>查看响应示例：</summary>
@@ -167,6 +189,7 @@ let veri_code = format!("{:0>2x}", veri_code % 256);
 {
     "code": 0,
     "message": "0",
+    "ttl": 1,
     "data": {}
 }
 ```
