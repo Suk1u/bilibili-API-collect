@@ -196,44 +196,6 @@ curl 'https://api.bilibili.com/x/internal/gaia-gateway/ExClimbCongLing' \
 
 </details>
 
-## 前端数据收集
-
-> https://api.bilibili.com/x/web-frontend/data/collector
-
-*请求方式：POST*
-
-用于收集前端用户行为数据，进行数据分析和用户体验优化。
-
-**正文参数（ application/json ）：**
-
-| 参数名 | 类型 | 内容 | 必要性 | 备注 |
-| ------ | ---- | ---- | ------ | ---- |
-| event | str | 事件类型 | 必要 | 如：page_view, click等 |
-| data | obj | 事件数据 | 非必要 | 根据事件类型变化 |
-| timestamp | num | 时间戳 | 非必要 | 毫秒级时间戳 |
-| page | str | 页面URL | 非必要 | 当前页面地址 |
-
-**json回复：**
-
-根对象：
-
-| 字段 | 类型 | 内容 | 备注 |
-| ---- | ---- | ---- | ---- |
-| code | num | 返回值 | 0：成功 |
-| data | null | 数据本体 | 通常为null |
-
-<details>
-<summary>查看响应示例：</summary>
-
-```json
-{
-    "code": 0,
-    "data": null
-}
-```
-
-</details>
-
 ## 获取GAIA公钥
 
 > https://api.bilibili.com/x/internal/gaia-gateway/ExGetAxe
